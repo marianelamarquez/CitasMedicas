@@ -1,0 +1,90 @@
+{% extends 'base.html' %}  
+{% load static %}
+{% block content %}
+
+<div class="container-fluid" style="max-width: 50%;">
+  <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">REGISTRAR DOCTOR</h6>
+        
+      </div>
+      <div class="card-body">
+        <form class="user" method="POST">
+          {% csrf_token %}
+        <div class="container-fluid">
+            
+          <div class="form-group">
+              <input type="text" class="form-control form-control-user" id="id_username" name="username"
+                     placeholder="Usuario..." required value="{{ form.username.value }}">
+              {% if form.errors.username %}
+                  <p class="text-danger">{{ form.errors.username }}</p>
+              {% endif %}
+          </div>
+          <div class="form-group">
+              <input type="text" class="form-control form-control-user" id="id_first_name" name="first_name"
+                     placeholder="Nombre..." required value="{{ form.first_name.value }}">
+              {% if form.errors.first_name %}
+                  <p class="text-danger">{{ form.errors.first_name }}</p>
+              {% endif %}
+          </div>
+          <div class="form-group">
+              <input type="text" class="form-control form-control-user" id="id_last_name" name="last_name"
+                     placeholder="Apellido..." required value="{{ form.last_name.value }}">
+              {% if form.errors.last_name %}
+                  <p class="text-danger">{{ form.errors.last_name }}</p>
+              {% endif %}
+          </div>
+          <div class="form-group">
+              <input type="email" class="form-control form-control-user" id="id_email" name="email"
+                     placeholder="Email..." required value="{{ form.email.value }}">
+              {% if form.errors.email %}
+                  <p class="text-danger">{{ form.errors.email }}</p>
+              {% endif %}
+          </div>
+          <div class="form-group">
+              <input type="tel" class="form-control form-control-user" id="id_telefono" name="telefono"
+                     placeholder="Numero de Telefono..." required value="{{ form.telefono.value }}">
+              {% if form.errors.telefono %}
+                  <p class="text-danger">{{ form.errors.telefono }}</p>
+              {% endif %}
+          </div>
+          <div class="form-group">
+              <input type="text" class="form-control form-control-user" id="id_direccion" name="direccion"
+                     placeholder="Direccion..." required value="{{ form.direccion.value }}">
+              {% if form.errors.direccion %}
+                  <p class="text-danger">{{ form.errors.direccion }}</p>
+              {% endif %}
+          </div>
+          <div class="form-group">
+              <input type="text" class="form-control form-control-user" id="id_ncolegiom" name="ncolegiom"
+                     placeholder="Numero de registro del Colegio de Medicos..." required value="{{ form.ncolegiom.value }}">
+              {% if form.errors.ncolegiom %}
+                  <p class="text-danger">{{ form.errors.ncolegiom }}</p>
+              {% endif %}
+          </div>
+          <div class="form-group">
+              <input type="password" class="form-control form-control-user" id="id_password1" name="password1"
+                     placeholder="Contraseña..." required>
+              {% if form.errors.password1 %}
+                  <p class="text-danger">{{ form.errors.password1 }}</p>
+              {% endif %}
+          </div>
+          <div class="form-group">
+              <input type="password" class="form-control form-control-user" id="id_password2" name="password2"
+                     placeholder="Confirme Contraseña..." required>
+              {% if form.errors.password2 %}
+                  <p class="text-danger">{{ form.errors.password2 }}</p>
+              {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-user btn-block">Registrar</button>
+          <a href="{% url 'ListarDoctor' %}" type="button" class="btn btn-danger btn-user btn-block">Cancelar</a> 
+          
+         
+        </div> 
+      </form>
+</div>
+</div>
+</div>
+
+{% endblock %}

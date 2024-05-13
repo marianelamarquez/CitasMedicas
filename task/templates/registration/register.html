@@ -1,0 +1,142 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CEMAR Citas</title>
+
+    <!-- Custom fonts for this template--> 
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-admin-2.min.css'%}" rel="stylesheet">
+
+</head>
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+  {% include "header.html" %}
+  </nav>
+
+  <body class="bg-gradient-primary">
+    <div class="container">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Registro de Usuario</h1>
+                            </div>
+                            <form class="user" method="POST">
+                                {% csrf_token %}
+                            
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="id_username" name="username"
+                                           placeholder="Usuario..." required value="{{ form.username.value }}">
+                                    {% if errors.username %}
+                                        <p class="text-danger">{{ errors.username }}</p>
+                                    {% endif %}
+                                </div>
+                           
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" id="id_first_name" name="first_name"
+                                           placeholder="Nombre..."  required value="{{ form.first_name.value }}">
+                                    {% if errors.first_name %}
+                                        <p class="text-danger">{{ errors.first_name }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control form-control-user" id="id_last_name" name="last_name"
+                                           placeholder="Apellido..."  required value="{{ form.last_name.value }}">
+                                    {% if errors.last_name %}
+                                        <p class="text-danger">{{ errors.last_name }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="id_email" name="email"
+                                           placeholder="Email..." required value="{{ form.email.value }}">
+                                    {% if errors.email %}
+                                        <p class="text-danger">{{ errors.email }}</p>
+                                    {% endif %}
+                                </div>
+                            <div class="form-group row">   
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="tel" class="form-control form-control-user" id="id_telefono" name="telefono"
+                                           placeholder="Numero de Telefono..." required value="{{ form.telefono.value }}">
+                                    {% if errors.telefono %}
+                                        <p class="text-danger">{{ errors.telefono }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control form-control-user" id="id_direccion" name="direccion"
+                                           placeholder="Direccion..."required value="{{ form.direccion.value }}">
+                                    {% if errors.direccion %}
+                                        <p class="text-danger">{{ errors.direccion }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="password" class="form-control form-control-user" id="id_password1" name="password1"
+                                           placeholder="Contraseña..." required>
+                                    {% if errors.password1 %}
+                                        <p class="text-danger">{{ errors.password1 }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="password" class="form-control form-control-user" id="id_password2" name="password2"
+                                           placeholder="Confirme Contraseña..." required>
+                                   
+                                </div>
+                                {% if errors.password2 %}
+                                <p class="text-danger">{{ errors.password2 }}</p>
+                            {% endif %}
+                            </div>
+                              <button class="btn btn-primary btn-user btn-block" type="submit">Registrar</button>
+                          </form>
+
+
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="">¿Olvidaste tu contraseña?</a>
+                            </div>
+                            <div class="text-center">
+                                <a class="small" href="{% url 'login' %}">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+{% include "footer.html" %}
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js'%}"></script>
+
+</body>
+
+</html>

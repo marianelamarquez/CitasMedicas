@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nueva Cita Médica</title>
+</head>
+<body>
+    <h1>Crear Nueva Cita Médica</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div> <label for="id_nombre_doctor">Nombre del Doctor:</label>
+            <input type="text" id="id_nombre_doctor" name="nombre_doctor" required></div>
+
+        <div><label for="id_fecha">Fecha:</label>
+         <input type="date" id="id_fecha" name="fecha" required></div>
+
+        <div><label for="id_hora">Hora:</label>
+            <input type="time" id="id_hora" name="hora" required></div>
+
+        <button type="submit" onclick="return confirm('¿Estás seguro de crear esta cita?')">Crear Cita</button>
+    </form>
+
+    <a href="{% url 'lista_citas' %}">Volver a la lista de citas</a>
+</body>
+</html>
+
+
+{% endblock %}
+
+

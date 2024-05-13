@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row justify-content-center mt-5"> <!-- Agregamos una fila y centramos el contenido verticalmente -->
+    <div class="col-md-6"> <!-- Establecemos el ancho de la columna -->
+      <div class="card shadow mb-4">
+          <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">ELIMINAR PACIENTE</h6>
+          </div>
+          <div class="card-body">
+              <form method="POST">
+                  <p>¿Estás seguro de que quieres eliminar este paciente?</p>
+                  {% csrf_token %}
+                  <input type="hidden" name="pk" value="{{ object.pk }}">
+                  <a href="{% url 'ListarPaciente' %}" type="button" class="btn btn-primary">Cancelar</a> 
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+              </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

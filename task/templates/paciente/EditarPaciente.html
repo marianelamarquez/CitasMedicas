@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid" style="max-width: 50%;">
+  <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">EDITAR PACIENTE</h6>
+      </div>
+      <div class="card-body">
+     <form class="user" method="POST">
+          {% csrf_token %}
+           
+        <div class="container-fluid">
+
+              <div class="row justify-content-center">
+                <div class="form-group col-md-9">
+                  <input type="text" class="form-control form-control-user text-center" id="id_first_name" name="first_name" placeholder="Nombre..."  {{ form.first_name }} 
+                </div>
+            </div>
+
+
+            <div class="row justify-content-center">
+              <div class="form-group col-md-9">
+                <input type="text" class="form-control form-control-user text-center" id="id_last_name" name="last_name"  placeholder="Apellido..."  {{ form.last_name }}
+              </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div class="form-group col-md-9">
+                <input type="tel" class="form-control form-control-user text-center" id="id_telefono" name="telefono"   placeholder="Numero de Telefono..." {{ form.telefono }}
+            </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div class="form-group col-md-9">
+                <input type="email" class="form-control form-control-user text-center" id="id_email" name="email"  placeholder="Email..." {{form.email }} 
+            </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div class="form-group col-md-9">
+                <input type="text" class="form-control form-control-user text-center" id="id_direccion" name="direccion"
+                       placeholder="Direccion..." {{ form.direccion }}
+          </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-md-9"> 
+                  <a href="{% url 'ListarPaciente' %}" type="button" class="btn btn-danger btn-user btn-block">Cancelar</a> 
+                  <button type="submit" class="btn btn-primary btn-user btn-block">Guardar Cambios</button>
+              </div>
+          </div>
+          
+        </div>
+         
+          </form>
+
+      </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,33 @@
+# Ignorar archivos y directorios generados automáticamente
+*.pyc
+__pycache__/
+*.sqlite3
+vendor
+
+# Entornos virtuales (si usas virtualenv o similar)
+venv/
+env/
+
+# Archivos de configuración con secretos o sensibles
+*.env
+*.secret
+*.pyc
+*.pyo
+*.pyd
+
+# Dependencias de Python (si no estás usando pipenv o poetry)
+/.venv/
+/lib/
+/bin/
+
+# Archivos de registro y archivos temporales
+/logs/
+/temp/
+/tmp/
+
+# Otros archivos y directorios locales que no quieres incluir en el control de versiones
+/local/
+/db.sqlite3
+
+# Dependencias de JavaScript (si estás usando npm)
+/node_modules/
