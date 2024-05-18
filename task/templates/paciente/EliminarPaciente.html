@@ -13,8 +13,8 @@
                   <p>¿Estás seguro de que quieres eliminar este paciente?</p>
                   {% csrf_token %}
                   <input type="hidden" name="pk" value="{{ object.pk }}">
-                  <a href="{% url 'ListarPaciente' %}" type="button" class="btn btn-primary">Cancelar</a> 
-                  <button type="submit" class="btn btn-danger">Eliminar</button>
+                  <a href="{% url 'ListarPaciente' %}" type="button" class="btn-user btn btn-primary">Cancelar</a> 
+                  <button type="submit" class="btn-user btn btn-danger">Eliminar</button>
               </form>
           </div>
       </div>

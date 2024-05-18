@@ -9,12 +9,12 @@
               <h6 class="m-0 font-weight-bold text-primary">ELIMINAR DOCTOR</h6>
           </div>
           <div class="card-body">
-              <form method="POST">
+              <form class="user" method="POST">
                   <p>¿Estás seguro de que quieres eliminar este doctor?</p>
                   {% csrf_token %}
                   <input type="hidden" name="pk" value="{{ object.pk }}">
-                  <a href="{% url 'ListarDoctor' %}" type="button" class="btn btn-primary">Cancelar</a> 
-                  <button type="submit" class="btn btn-danger" >Eliminar</button>
+                  <a href="{% url 'ListarDoctor' %}" type="button" class="btn-user btn btn-primary">Cancelar</a> 
+                  <button type="submit" class="btn-user btn btn-danger" >Eliminar</button>
               </form>
           </div>
       </div>

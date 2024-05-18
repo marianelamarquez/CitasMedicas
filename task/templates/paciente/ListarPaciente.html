@@ -39,6 +39,7 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Usuario</th>
                                             <th>Nombre</th>
                                             <th>Apellido</th>
@@ -52,6 +53,7 @@
                                     {% for usuario  in Usuario %}
                                     <tbody>
                                         <tr>
+                                            <td> {{ usuario.id }}</td>
                                             <td> {{ usuario.username }}</td>
                                             <td>{{ usuario.first_name }}</td>
                                             <td>{{ usuario.last_name }}</td>

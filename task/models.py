@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 
-# Create your models here.
-#tablas como de bdd
+#Tablas como de bdd
 
+
+#-----USUARIO-----
 class CustomUser(AbstractUser):
     ncolegiom = models.CharField(max_length=20, unique=True, blank=True)
-    telefono = models.CharField(max_length=25,default='00000000000')
+    telefono = models.CharField(max_length=25)
     direccion = models.CharField(max_length=255)
 
     groups = models.ManyToManyField(
@@ -22,4 +23,22 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.'
     )
 
+#-----DISPONIBILIDAD DE DOCTOR-----
+class DisponibilidadDoctor(models.Model):
+    doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    fecha = models.DateField()
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
 
+
+
+
+
+#--------CITA------
+class Appointment(models.Model):
+    doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='doctor_appointments')
+    patient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='patient_appointments')
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)

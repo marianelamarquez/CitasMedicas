@@ -25,6 +25,14 @@ urlpatterns = [
     path('EditarPaciente/<int:pk>/', login_required(views.EditarPaciente.as_view()), name='EditarPaciente'),
     path('EditarPacientePerfil/<int:pk>/', login_required(views.EditarPacientePerfil.as_view()), name='EditarPacientePerfil'),
     
+    #URLS DE DISPONIBILIDAD DEL DOCTOR
+    path('crear-disponibilidad/', login_required(views.crear_disponibilidad), name='crear-disponibilidad'),
+    path('ver-disponibilidad/', login_required(views.ver_disponibilidad), name='ver_disponibilidad'),
+    path("eliminar-disponibilidad/<int:pk>/", login_required(views.eliminar_disponibilidad), name="eliminar_disponibilidad"),
+    path("modificar-disponibilidad<int:pk>/", login_required(views.modificar_disponibilidad), name="modificar_disponibilidad"),
+
+    #URLS DE CITAS   
+    path('crear_cita/',login_required( views.appointment_create), name='crear_cita'),
 
 
     # URLS DE CITAS

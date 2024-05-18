@@ -11,42 +11,56 @@
           {% csrf_token %}
            
         <div class="container-fluid">
+          <div class="container-fluid">
+            <div class="row justify-content-center">
+              <div class="form-group col-md-9">
+                <input type="text" class="form-control form-control-user text-center" id="username"
+                 name="username" placeholder="Usuario..." value="{{ form.instance.username }}"> 
+             
+            </div>
+            </div>
           
               <div class="row justify-content-center">
                 <div class="form-group col-md-9">
-                  <input type="text" class="form-control form-control-user text-center" id="id_first_name" name="first_name" placeholder="Nombre..."  {{ form.first_name }} 
+                  <input type="text" class="form-control form-control-user text-center" id="id_first_name"
+                   name="first_name" placeholder="Nombre..."    value="{{ form.instance.first_name }} "/>
                 </div>
             </div>
 
 
             <div class="row justify-content-center">
               <div class="form-group col-md-9">
-                <input type="text" class="form-control form-control-user text-center" id="id_last_name" name="last_name"  placeholder="Apellido..."  {{ form.last_name }}
+                <input type="text" class="form-control form-control-user text-center" id="id_last_name" 
+                name="last_name"  placeholder="Apellido..."  value=" {{ form.instance.last_name }} "/>
+              </div>
+            </div>
+            
+
+            <div class="row justify-content-center">
+              <div class="form-group col-md-9">
+                <input type="tel" class="form-control form-control-user text-center" id="id_telefono" 
+       name="telefono" placeholder="Numero de Telefono..." value="{{ form.instance.telefono }}"/>
+
+            </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div class="form-group col-md-9">
+                <input type="email" class="form-control form-control-user text-center" id="id_email" 
+                name="email"  placeholder="Email..." value="{{form.instance.email }} "/>
               </div>
             </div>
 
             <div class="row justify-content-center">
               <div class="form-group col-md-9">
-                <input type="tel" class="form-control form-control-user text-center" id="id_telefono" name="telefono"   placeholder="Numero de Telefono..." {{ form.telefono }}
-            </div>
-            </div>
-
-            <div class="row justify-content-center">
-              <div class="form-group col-md-9">
-                <input type="email" class="form-control form-control-user text-center" id="id_email" name="email"  placeholder="Email..." {{form.email }} 
-            </div>
-            </div>
-
-            <div class="row justify-content-center">
-              <div class="form-group col-md-9">
                 <input type="text" class="form-control form-control-user text-center" id="id_direccion" name="direccion"
-                       placeholder="Direccion..." {{ form.direccion }}
+                       placeholder="Direccion..."  value="{{ form.instance.direccion }} "/>
           </div>
             </div>
             <div class="row justify-content-center">
                 <div class="form-group col-md-9">
                     <input type="text" class="form-control form-control-user text-center" id="id_ncolegiom" name="ncolegiom"
-                           placeholder="Numero de registro del Colegio de Medicos..." {{ form.ncolegiom }}
+                           placeholder="Numero de registro del Colegio de Medicos..."   value="{{ form.instance.ncolegiom }} "/>
                 </div>
               </div>
             <div class="row justify-content-center">

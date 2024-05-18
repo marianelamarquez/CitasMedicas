@@ -37,6 +37,7 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Usuario</th>
                                             <th>Nombre</th>
                                             <th>Apellido</th>
@@ -49,6 +50,7 @@
                                 {% for usuario  in Usuario %}
                                      <tbody>
                                             <tr>
+                                                <td>{{ usuario.id }}</td>
                                                 <td>{{ usuario.username }}</td>
                                                 <td>{{ usuario.first_name }}</td>
                                                 <td>{{ usuario.last_name }}</td>
@@ -78,16 +80,9 @@
                         <h1>No hay doctores registrados</h1>
                     </div>
                 </div>
-      
-    
           {% endif %}
-          
-          
-    <div class="modal fade" id="registro" role="dialog"> </div>
-
 
      {% endblock %}
-            
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>

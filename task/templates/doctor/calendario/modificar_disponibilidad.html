@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar disponibilidad</title>
+</head>
+<body>
+    <h1>Modificar disponibilidad</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="disponibilidad_id" value="{{ disponibilidad.id }}">
+
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" value="{{ disponibilidad.fecha|date:'d-m-Y' }}">
+       
+        <label for="hora_inicio">Hora de inicio:</label>
+        <input type="time" id="hora_inicio" name="hora_inicio" value="{{ disponibilidad.hora_inicio }}">
+
+        <label for="hora_fin">Hora de fin:</label>
+        <input type="time" id="hora_fin" name="hora_fin" value="{{ disponibilidad.hora_fin }}">
+
+        <input type="submit" value="Modificar">
+        <a href="{% url 'ver_disponibilidad' %}">Cancelar</a>
+    </form>
+</body>
+</html>
+{% endblock content %}

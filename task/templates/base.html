@@ -20,10 +20,11 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
 
 <body id="page-top">
+    
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -35,7 +36,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <i class="fa-regular fa-calendar-check"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">CEMAR Citas</div>
             </a>
@@ -46,13 +47,13 @@
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="/">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <i class="fa-solid fa-house-user"></i>
                     <span>INICIO</span></a>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
+            {% if is_patient or user.is_superuser or is_admin %}
+             <!-- Divider -->
+             <hr class="sidebar-divider">
             <!-- Heading -->
             <div class="sidebar-heading">
                 Paciente
@@ -62,20 +63,20 @@
             <!-- Nav Item - CITAS-->
             
             <li class="nav-item">
-                <a class="nav-link" href="#"> 
-                    <i class="fas fa-fw fa-table"></i>
+                <a class="nav-link" href="{% url 'crear_cita' %}"> 
+                    <i class="fa-solid fa-calendar-check"></i>
                     <span>Citas</span></a>
-            </li>
+            </li> 
 
             
             <!-- Nav Item - CONSULTA -->
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fa-solid fa-receipt"></i>
                     <span>Consultas</span></a>
             </li>
-
-            {% if is_doctor or user.is_superuser %}
+        {% endif %}
+        {% if is_doctor or is_admin or user.is_superuser %}
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -86,20 +87,20 @@
                            
             <!-- Nav Item - CALENDARIO -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-table"></i>
+                <a class="nav-link" href="{% url 'ver_disponibilidad' %}">
+                    <i class="fa-regular fa-calendar"></i>
                     <span>Calendario</span></a>
             </li>
            
             <!-- Nav Item - Pacientes -->
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fa-solid fa-clipboard-list"></i>
                     <span>Pacientes</span></a>
             </li>
 
           {% endif %}   
-            {% if user.is_superuser %}
+            {% if user.is_superuser or is_admin %}
              <!-- Divider -->
              <hr class="sidebar-divider">
                <!-- Heading -->
@@ -107,21 +108,11 @@
                 Administrador
             </div>
             <!-- Nav Item - Administrador -->
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'ListarDoctor' %}">
-                    <i class=""></i>
-                    <span>Lista Doctores</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'ListarPaciente' %}">
-                    <i class=""></i>
-                    <span>Lista Pacientes</span></a>
-            </li>
-           
+                
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
+                    <i class="fa-regular fa-folder-open"></i>
                     <span>Opciones</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -158,10 +149,7 @@
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                     {% include "header.html" %}
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+                   
 
 
                     <!-- Topbar Navbar -->
@@ -179,7 +167,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                {% if is_patient %}
+                                {% if is_patient or is_admin or user.is_superuser %}
                                 <a class="dropdown-item" href="{% url 'perfilPaciente' user.username %}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
