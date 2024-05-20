@@ -20,12 +20,14 @@
   <div class="container-fluid " style="max-width: 40%;"  >
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
+       <!-- titulo -->
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary text-center">SELECCIONAR DOCTOR</h6>
     </div>
   <div class="card-body">
   <div class="container">
     <div class="dropdown text-center"> <!-- Agregar la clase text-center aquí -->
+      <div class="form-group">
       <button class="btn btn-primary dropdown-toggle " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Seleccionar Doctor
       </button>
@@ -34,7 +36,14 @@
           <li><a class="dropdown-item" href="{% url 'seleccionar_fecha' doctor.id %}">{{ doctor.first_name|upper|add:" "}}{{ doctor.last_name|upper }}</a></li>
         {% endfor %}
       </ul>
+      </div>
     </div>
+    <div class="row justify-content-center">
+      <div class="form-group">
+      <a href="/" class="btn btn-user btn-secondary btn-sm">Regresar</a>
+
+      </div>
+  </div>
   </div>
  </div>
 

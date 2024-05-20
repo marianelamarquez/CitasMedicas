@@ -4,18 +4,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seleccionar Fecha</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <!-- Custom fonts for this template -->
+        <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+        <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+    
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/sb-admin-2.min.css'%}" rel="stylesheet">
+    
+        <!-- Custom styles for this page -->
+        <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
+ 
 </head>
 <body>
-    <h2>Seleccionar Fecha</h2>
-    <a href="{% url 'seleccionar_doctor' %}">Volver a seleccionar doctor</a>
-    <ul>
-        {% for disponibilidad in disponibilidades %}
-        <li><a href="{% url 'seleccionar_turno' disponibilidad.id %}">{{ disponibilidad.fecha }}</a></li>
-        {% endfor %}
-    </ul>
+    <div class="container-fluid " style="max-width: 40%;"  >
+        
+        <div class="card shadow mb-4">
+            <!-- titulo -->
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary text-center">SELECCIONAR FECHA</h6>
+            </div>
+                    <!-- contenido -->
+                <div class="card-body">
+                    <div class="container">
+                        <div class="text-center">
+                            
+                                {% for disponibilidad in disponibilidades %}
+                                <div class="row justify-content-center">
+                                    <div class="form-group">
+                                        <li  style="list-style-type: none;"><a href="{% url 'seleccionar_turno' disponibilidad.id %}" class="btn btn-user btn-primary btn-sm">{{ disponibilidad.fecha }}</a></li>
+
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            
+                                <div class="row justify-content-center">
+                                    <div class="form-group">
+                            <a href="{% url 'seleccionar_doctor' %}" class="btn btn-user btn-secondary btn-sm">Regresar</a>
+                          
+                                    </div>
+                                </div>
+                
+                        </div>
+                    </div>
+                </div>         
+        </div>
+    </div>
 </body>
 </html>
 {% endblock %}

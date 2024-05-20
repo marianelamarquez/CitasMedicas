@@ -404,6 +404,7 @@ def modificar_disponibilidad(request, pk):
         return HttpResponseBadRequest("Método no permitido.")
 
 #------CITAS -----
+#Vision de Paciente
 def seleccionar_doctor(request):
     if not request.user.groups.filter(name="patient").exists():
         messages.error(request, "Solo los pacientes pueden acceder a esta página.")
@@ -441,7 +442,6 @@ def seleccionar_turno(request, disponibilidad_id):
     context["disponibilidad"] = disponibilidad
     context["turnos_disponibles"] = turnos_disponibles
     return render(request, "Citas/seleccionar_turno.html", context)
-
 
 def agendar_cita(request, disponibilidad_id):
     if not request.user.groups.filter(name="patient").exists():
@@ -482,3 +482,66 @@ def detalle_cita(request, cita_id):
     return render(request, 'Citas/detalle_cita.html', context)
 
 
+def mis_citas(request):
+    if not request.user.groups.filter(name="patient").exists():
+        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
+        return redirect("home")
+
+    citas = Cita.objects.filter(paciente=request.user).select_related('doctor', 'disponibilidad')
+    context = get_user_context(request)
+    context["citas"] = citas
+    return render(request, "Citas/mis_citas.html", context)
+
+def eliminar_cita(request, cita_id):
+    if not request.user.groups.filter(name="patient").exists():
+        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
+        return redirect("home")
+
+    cita = get_object_or_404(Cita, id=cita_id, paciente=request.user)
+    
+    if request.method == 'POST':
+        cita.delete()
+        messages.success(request, "Cita eliminada con éxito.")
+        return redirect('mis_citas')
+    
+    context = get_user_context(request)
+    context["cita"] = cita
+    return render(request, 'Citas/eliminar_cita.html', context)
+
+#Vision de doctor
+
+def citas_doctor(request):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para ver esta página.")
+        return redirect("home")
+
+    citas = Cita.objects.filter(doctor=request.user).select_related('paciente', 'disponibilidad')
+    context = get_user_context(request)
+    context["citas"] = citas
+    return render(request, "Citas/citas_doctor.html", context)
+
+def detalle_cita_doctor(request, cita_id):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para ver esta página.")
+        return redirect("home")
+
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+    context = get_user_context(request)
+    context["cita"] = cita
+    return render(request, 'Citas/detalle_cita_doctor.html', context)
+
+def eliminar_cita_doctor(request, cita_id):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+        return redirect("home")
+
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+    
+    if request.method == 'POST':
+        cita.delete()
+        messages.success(request, "Cita eliminada con éxito.")
+        return redirect('citas_doctor')
+    
+    context = get_user_context(request)
+    context["cita"] = cita
+    return render(request, 'Citas/eliminar_cita_doctor.html', context)

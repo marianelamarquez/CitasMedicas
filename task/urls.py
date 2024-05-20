@@ -37,14 +37,15 @@ urlpatterns = [
     path('seleccionar-turno/<int:disponibilidad_id>/', login_required( views.seleccionar_turno), name='seleccionar_turno'),
     path('agendar-cita/<int:disponibilidad_id>/', login_required( views.agendar_cita), name='agendar_cita'),
     path('detalle-cita/<int:cita_id>/', login_required( views.detalle_cita), name='detalle_cita'),
+    path('mis_citas/', login_required(views.mis_citas), name='mis_citas'),
+    path('eliminar_cita/<int:cita_id>/',  login_required(views.eliminar_cita), name='eliminar_cita'),
+    path('doctor/citas/',  login_required(views.citas_doctor), name='citas_doctor'),
+    path('doctor/cita/<int:cita_id>/',  login_required(views.detalle_cita_doctor), name='detalle_cita_doctor'),
+    path('doctor/eliminar_cita/<int:cita_id>/', login_required(views.eliminar_cita_doctor), name='eliminar_cita_doctor'),
 
 
     # URLS DE CITAS
-    
-    #path('crear-cita/',login_required( views.appointment_create), name='crear_cita'),
     #path('modificar/<int:pk>/',login_required( ModificarCita.as_view()), name='modificar_cita'),
-    #path('eliminar/<int:pk>/',login_required( EliminarCita.as_view()), name='eliminar_cita'),
-    #path('lista-citas/',login_required( ListaCitas.as_view()), name='lista_citas'),
-
+ 
     
 ]

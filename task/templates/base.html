@@ -61,13 +61,11 @@
 
 
             <!-- Nav Item - CITAS-->
-            
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'seleccionar_doctor' %}"> 
+                <a class="nav-link" href="{% url 'mis_citas' %}"> 
                     <i class="fa-solid fa-calendar-check"></i>
-                    <span>Citas</span></a>
+                    <span>Mis Citas</span></a>
             </li> 
-          
             
             <!-- Nav Item - CONSULTA -->
             <li class="nav-item">
@@ -94,7 +92,7 @@
            
             <!-- Nav Item - Pacientes -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% url 'citas_doctor' %}">
                     <i class="fa-solid fa-clipboard-list"></i>
                     <span>Pacientes</span></a>
             </li>

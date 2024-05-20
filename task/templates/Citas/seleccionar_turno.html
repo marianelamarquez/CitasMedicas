@@ -4,25 +4,63 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seleccionar Turno</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <!-- Custom fonts for this template -->
+       <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+       <link
+           href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+           rel="stylesheet">
+   
+       <!-- Custom styles for this template -->
+       <link href="{% static 'css/sb-admin-2.min.css'%}" rel="stylesheet">
+   
+       <!-- Custom styles for this page -->
+       <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
+
 </head>
 <body>
-    <h2>Seleccionar Turno</h2>
-    <form action="{% url 'agendar_cita' disponibilidad.id %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="disponibilidad_id" value="{{ disponibilidad.id }}">
-        <label for="turno">Selecciona un turno:</label>
-        <select name="turno" id="turno">
-            {% for inicio, fin in turnos_disponibles %}
-                <option value="{{ inicio }}-{{ fin }}">Turno: {{ forloop.counter }} {{ inicio }} - {{ fin }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Agendar</button>
-    </form>
-    <br>
-    <a href="{% url 'seleccionar_fecha' disponibilidad.doctor.id %}" class="btn btn-secondary">Volver a seleccionar fecha</a>
+    <div class="container-fluid " style="max-width: 50%;">
+        <div class="card shadow mb-4">
+                    <!-- titulo -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary text-center">SELECCIONAR TURNO</h6>
+                </div>
+                    <!-- contenido -->
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="text-center">
+                                <form class="user" action="{% url 'agendar_cita' disponibilidad.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="row justify-content-center">
+                                        <div class="form-group">
+                                            <input type="hidden" name="disponibilidad_id" value="{{ disponibilidad.id }}">
+                                            <label for="turno">Selecciona un turno:</label>
+                                            <select name="turno" id="turno" class="text-secondary">
+                                                {% for inicio, fin in turnos_disponibles %}
+                                                    <option value="{{ inicio }}-{{ fin }}">Turno: {{ forloop.counter }} {{ inicio }} - {{ fin }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row justify-content-center">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary" >Agendar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                
+                                <div class="row justify-content-center">
+                                    <div class="form-group">
+                                         <a href="{% url 'seleccionar_fecha' disponibilidad.doctor.id %}" class="btn btn-user btn-secondary btn-sm">Regresar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    </div>
 </body>
 </html>
 {% endblock %}
