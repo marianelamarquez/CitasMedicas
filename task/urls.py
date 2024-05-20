@@ -32,11 +32,16 @@ urlpatterns = [
     path("modificar-disponibilidad<int:pk>/", login_required(views.modificar_disponibilidad), name="modificar_disponibilidad"),
 
     #URLS DE CITAS   
-    path('crear_cita/',login_required( views.appointment_create), name='crear_cita'),
+    path('seleccionar-doctor/', views.seleccionar_doctor, name='seleccionar_doctor'),
+    path('seleccionar-fecha/<int:doctor_id>/', views.seleccionar_fecha, name='seleccionar_fecha'),
+    path('seleccionar-turno/<int:disponibilidad_id>/', login_required( views.seleccionar_turno), name='seleccionar_turno'),
+    path('agendar-cita/<int:disponibilidad_id>/', login_required( views.agendar_cita), name='agendar_cita'),
+    path('detalle-cita/<int:cita_id>/', login_required( views.detalle_cita), name='detalle_cita'),
 
 
     # URLS DE CITAS
-    #path('crear/',login_required( CrearCita.as_view()), name='crear_cita'),
+    
+    #path('crear-cita/',login_required( views.appointment_create), name='crear_cita'),
     #path('modificar/<int:pk>/',login_required( ModificarCita.as_view()), name='modificar_cita'),
     #path('eliminar/<int:pk>/',login_required( EliminarCita.as_view()), name='eliminar_cita'),
     #path('lista-citas/',login_required( ListaCitas.as_view()), name='lista_citas'),

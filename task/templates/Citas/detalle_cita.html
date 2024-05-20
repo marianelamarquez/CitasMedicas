@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de la Cita</title>
+</head>
+<body>
+    <h2>Detalle de la Cita</h2>
+    <p>Doctor:{{ cita.doctor.first_name|upper|add:" "}}{{ cita.doctor.last_name|upper }}</p> 
+    <p>Fecha: {{ cita.fecha }}</p>
+    <p>Hora de inicio: {{ cita.hora_inicio }}</p>
+    <p>Hora de fin: {{ cita.hora_fin }}</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Volver a inicio</a>
+</body>
+</html>
+{% endblock %}

@@ -1,30 +1,67 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Modificar disponibilidad</title>
+    <!-- Custom fonts for this template -->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/sb-admin-2.min.css'%}" rel="stylesheet">
+    <!-- Custom styles for this page -->
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
+    <!-- Incluye el CSS de Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
-    <h1>Modificar disponibilidad</h1>
-
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="disponibilidad_id" value="{{ disponibilidad.id }}">
-
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha" name="fecha" value="{{ disponibilidad.fecha|date:'d-m-Y' }}">
-       
-        <label for="hora_inicio">Hora de inicio:</label>
-        <input type="time" id="hora_inicio" name="hora_inicio" value="{{ disponibilidad.hora_inicio }}">
-
-        <label for="hora_fin">Hora de fin:</label>
-        <input type="time" id="hora_fin" name="hora_fin" value="{{ disponibilidad.hora_fin }}">
-
-        <input type="submit" value="Modificar">
-        <a href="{% url 'ver_disponibilidad' %}">Cancelar</a>
-    </form>
+<div class="container" style="max-width: 50%;">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary text-center">MODIFICAR DISPONIBILIDAD</h6>
+        </div>
+        <div class="card-body">
+            <form class="user" method="post" action="{% url 'modificar_disponibilidad' disponibilidad.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="disponibilidad_id" value="{{ disponibilidad.id }}">
+                <input type="hidden" name="fecha" value="{{ disponibilidad.fecha|date:'Y-m-d' }}">
+                <div class="row justify-content-center">
+                    <div class="form-group col-md-9">
+                        <label for="fecha">Fecha:</label>
+                        <input type="text" id="fecha" name="fecha_display" value="{{ disponibilidad.fecha|date:'d-m-Y' }}" disabled>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group col-md-9">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="hora_inicio">Hora de inicio:</label>
+                                <input type="time" id="hora_inicio" name="hora_inicio" value="{{ disponibilidad.hora_inicio }}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="hora_fin">Hora de fin:</label>
+                                <input type="time" id="hora_fin" name="hora_fin" value="{{ disponibilidad.hora_fin }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="form-group col-md-9">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="{% url 'ver_disponibilidad' %}" type="button" class="btn btn-danger btn-user btn-block">Cancelar</a>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="submit" class="btn btn-primary btn-user btn-block" value="Modificar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
 {% endblock content %}

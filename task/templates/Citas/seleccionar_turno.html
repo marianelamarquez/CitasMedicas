@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Turno</title>
+</head>
+<body>
+    <h2>Seleccionar Turno</h2>
+    <form action="{% url 'agendar_cita' disponibilidad.id %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="disponibilidad_id" value="{{ disponibilidad.id }}">
+        <label for="turno">Selecciona un turno:</label>
+        <select name="turno" id="turno">
+            {% for inicio, fin in turnos_disponibles %}
+                <option value="{{ inicio }}-{{ fin }}">Turno: {{ forloop.counter }} {{ inicio }} - {{ fin }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Agendar</button>
+    </form>
+    <br>
+    <a href="{% url 'seleccionar_fecha' disponibilidad.doctor.id %}" class="btn btn-secondary">Volver a seleccionar fecha</a>
+</body>
+</html>
+{% endblock %}

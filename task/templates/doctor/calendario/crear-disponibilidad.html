@@ -1,29 +1,108 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Crear disponibilidad</title>
+     <!-- Custom fonts for this template -->
+     <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+     <link
+         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+         rel="stylesheet">
+ 
+     <!-- Custom styles for this template -->
+     <link href="{% static 'css/sb-admin-2.min.css'%}" rel="stylesheet">
+ 
+     <!-- Custom styles for this page -->
+     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
+ 
+    <!-- Incluye el CSS de Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
-    <h1>Crear disponibilidad</h1>
+    <div class="container" style="max-width: 50%;">
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <!-- header -->
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary text-center">CREAR DISPONIBILIDAD</h6>
+            </div>
+            <!-- fin header -->
+            <!-- Mostrar mensajes de error -->
+            <div>
+                {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+         
+            <div class="card-body">
+                    <form class="user" method="POST">
+                        {% csrf_token %}
+                        <div class="row justify-content-center">
+                            <!-- Fecha -->
+                            <div class="form-group col-md-9">
+                                <label for="fecha">Fecha</label>
+                                <input type="text" id="fecha" name="fecha" class="form-control">
+                            </div>
+                        </div>
+                        <!-- Hora de inicio y Hora de fin -->
+                        <div class="row justify-content-center">
+                            <div class="form-group col-md-9">
+                                <div class="row">
+                                    <div class="form-group col-md-6" >
+                                        <label for="hora_inicio">Hora de inicio</label>
+                                        <input type="time" id="hora_inicio" name="hora_inicio" class="form-control">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="hora_fin">Hora de fin</label>
+                                        <input type="time" id="hora_fin" name="hora_fin" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Botones -->
+                        <div class="row justify-content-center">
+                            <div class="form-group col-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="{% url 'ver_disponibilidad' %}" type="button" class="btn btn-danger btn-user btn-block">Cancelar</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">Crear </button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <!--FIn Botones -->
+                    </form>
+                </div>
+            </div>
+        </div>
+   
 
-    <form method="post">
-        {% csrf_token %}
 
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha" name="fecha" required>
 
-        <label for="hora_inicio">Hora de inicio:</label>
-        <input type="time" id="hora_inicio" name="hora_inicio" required>
+  <!-- Incluye el JS de Flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Obtener fechas existentes desde el contexto y convertir a JSON
+      const fechasExistentes = JSON.parse('{{ fechas_existentes|safe|escapejs }}');
 
-        <label for="hora_fin">Hora de fin:</label>
-        <input type="time" id="hora_fin" name="hora_fin" required>
-
-        <button type="submit">Crear disponibilidad</button>
-        <a href="{% url 'ver_disponibilidad' %}">Cancelar</a>
-    </form>
+      flatpickr("#fecha", {
+        dateFormat: "Y-m-d",
+        minDate: "today",  // No permitir fechas pasadas
+        disable: fechasExistentes  // Deshabilitar fechas con disponibilidad existente
+      });
+    });
+  </script>
 </body>
 </html>
+
 {% endblock content %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Fecha</title>
+</head>
+<body>
+    <h2>Seleccionar Fecha</h2>
+    <a href="{% url 'seleccionar_doctor' %}">Volver a seleccionar doctor</a>
+    <ul>
+        {% for disponibilidad in disponibilidades %}
+        <li><a href="{% url 'seleccionar_turno' disponibilidad.id %}">{{ disponibilidad.fecha }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+{% endblock %}

@@ -1,14 +1,16 @@
 import datetime
+from django.utils import timezone
+import json
 from django.shortcuts import get_object_or_404, render, redirect
+from django.core.paginator import Paginator
 from django.contrib.auth import logout, login, authenticate
-from .forms import UserRegistrationForm, DisponibilidadDoctorForm ,AppointmentForm
+from .forms import UserRegistrationForm
 from django.contrib.auth.models import Group
-from .models import CustomUser, Appointment, DisponibilidadDoctor
+from .models import CustomUser, Cita, DisponibilidadDoctor
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import HttpResponseBadRequest, HttpResponse
-from django.core.exceptions import ValidationError
 from django.contrib import messages
 
 #Para saber que tipo de usuario es y enviar a las vistas
@@ -75,6 +77,7 @@ def register(request):
         else:
            
             errors = user_form.errors
+            print(errors)
             return render(request, 'registration/register.html', {'form': user_form, 'errors': errors})
    
     else:
@@ -226,7 +229,13 @@ def crear_disponibilidad(request):
             messages.error(request, "No tienes permisos para crear disponibilidad.")
             return redirect("home")
 
-        context = get_user_context(request) 
+        # Obtener fechas con disponibilidad ya creada
+        disponibilidades_existentes = DisponibilidadDoctor.objects.filter(doctor=request.user)
+        fechas_existentes = [disp.fecha.strftime("%Y-%m-%d") for disp in disponibilidades_existentes]
+
+        context = get_user_context(request)
+        context["fechas_existentes"] = json.dumps(fechas_existentes)  # Convertir a JSON
+
         return render(request, "doctor/calendario/crear-disponibilidad.html", context)
 
     elif request.method == "POST":
@@ -236,7 +245,7 @@ def crear_disponibilidad(request):
 
         if not fecha or not hora_inicio or not hora_fin:
             messages.error(request, "Debes ingresar todos los campos obligatorios.")
-            context = get_user_context(request)  
+            context = get_user_context(request)
             return render(request, "doctor/calendario/crear-disponibilidad.html", context)
 
         try:
@@ -251,16 +260,16 @@ def crear_disponibilidad(request):
 
         if hora_inicio_obj >= hora_fin_obj:
             messages.error(request, "La hora de inicio debe ser antes de la hora de fin.")
-            context = get_user_context(request) 
+            context = get_user_context(request)
             return render(request, "doctor/calendario/crear-disponibilidad.html", context)
 
         # Validación para evitar duplicados:
         disponibilidades_existentes = DisponibilidadDoctor.objects.filter(
-            doctor=request.user, fecha=fecha_obj, hora_inicio=hora_inicio_obj
+            doctor=request.user, fecha=fecha_obj
         )
 
         if disponibilidades_existentes:
-            messages.error(request, "Ya existe una disponibilidad para esta fecha y hora.")
+            messages.error(request, "Ya existe una disponibilidad para esta fecha.")
             context = get_user_context(request)
             return render(request, "doctor/calendario/crear-disponibilidad.html", context)
 
@@ -273,14 +282,38 @@ def crear_disponibilidad(request):
         return redirect('ver_disponibilidad')
 
     else:
-        return HttpResponseBadRequest("Método no permitido.")  
+        return HttpResponseBadRequest("Método no permitido.")
 
 def ver_disponibilidad(request):
     if not request.user.groups.filter(name="doctor").exists():
         messages.error(request, "No tienes permisos para ver tu disponibilidad.")
         return redirect("home")
 
-    disponibilidades = DisponibilidadDoctor.objects.filter(doctor=request.user)
+    disponibilidades_list = DisponibilidadDoctor.objects.filter(doctor=request.user).order_by('fecha')
+
+    paginator = Paginator(disponibilidades_list, 10)  # Muestra 10 disponibilidades por página
+
+    page_number = request.GET.get('page')
+    disponibilidades = paginator.get_page(page_number)
+
+    for disponibilidad in disponibilidades:
+        # Calcular turnos disponibles
+        hoy = datetime.date.today()
+        hora_inicio = datetime.datetime.combine(hoy, disponibilidad.hora_inicio)
+        hora_fin = datetime.datetime.combine(hoy, disponibilidad.hora_fin)
+
+        diferencia_horas = hora_fin - hora_inicio
+        cantidad_turnos = int(diferencia_horas.total_seconds() / 3600)  # Convertir a horas
+        turnos_disponibles = []
+        hora_inicio_turno = hora_inicio
+        for i in range(cantidad_turnos):
+            turno_str = hora_inicio_turno.strftime("%H:%M")
+            turnos_disponibles.append(turno_str)
+            hora_inicio_turno += datetime.timedelta(hours=1)
+
+        disponibilidad.turnos_disponibles = turnos_disponibles
+        disponibilidad.cantidad_turnos = cantidad_turnos
+
     context = get_user_context(request) 
     context["disponibilidades"] = disponibilidades
 
@@ -294,8 +327,8 @@ def eliminar_disponibilidad(request, pk):
     disponibilidad = get_object_or_404(DisponibilidadDoctor, pk=pk, doctor=request.user)
 
     if request.method == "GET":
-        context = get_user_context(request)  # Obtén el contexto adicional
-        context["disponibilidades"] = disponibilidad
+        context = get_user_context(request)
+        context["disponibilidad"] = disponibilidad
         return render(request, "doctor/calendario/eliminar_disponibilidad.html", context)
 
     elif request.method == "POST":
@@ -308,8 +341,8 @@ def eliminar_disponibilidad(request, pk):
             return redirect("ver_disponibilidad")
 
     else:
-        return HttpResponseBadRequest("Método no permitido.")
-    
+        return HttpResponseBadRequest("Método no permitido.")   
+
 def modificar_disponibilidad(request, pk):
     if not request.user.groups.filter(name="doctor").exists():
         messages.error(request, "No tienes permisos para modificar disponibilidad.")
@@ -318,48 +351,48 @@ def modificar_disponibilidad(request, pk):
     disponibilidad = get_object_or_404(DisponibilidadDoctor, pk=pk, doctor=request.user)
 
     if request.method == "GET":
-        context = get_user_context(request)  # Obtén el contexto adicional
-        context["disponibilidades"] = disponibilidad
+        context = get_user_context(request)
+        context["disponibilidad"] = disponibilidad
         return render(request, "doctor/calendario/modificar_disponibilidad.html", context)
 
     elif request.method == "POST":
-        nueva_fecha = request.POST.get("fecha")
         nueva_hora_inicio = request.POST.get("hora_inicio")
         nueva_hora_fin = request.POST.get("hora_fin")
 
-        if not nueva_fecha or not nueva_hora_inicio or not nueva_hora_fin:
+        if not nueva_hora_inicio or not nueva_hora_fin:
             messages.error(request, "Debes ingresar todos los campos obligatorios.")
             context = get_user_context(request)
+            context["disponibilidad"] = disponibilidad
             return render(request, "doctor/calendario/modificar_disponibilidad.html", context)
 
         try:
-            # Convertir strings a objetos Date y Time
-            nueva_fecha_obj = datetime.datetime.strptime(nueva_fecha, "%Y-%m-%d").date()
             nueva_hora_inicio_obj = datetime.datetime.strptime(nueva_hora_inicio, "%H:%M").time()
             nueva_hora_fin_obj = datetime.datetime.strptime(nueva_hora_fin, "%H:%M").time()
         except ValueError:
-            messages.error(request, "Formato de fecha u hora no válido.")
+            messages.error(request, "Formato de hora no válido.")
             context = get_user_context(request)
+            context["disponibilidad"] = disponibilidad
             return render(request, "doctor/calendario/modificar_disponibilidad.html", context)
 
         if nueva_hora_inicio_obj >= nueva_hora_fin_obj:
             messages.error(request, "La hora de inicio debe ser antes de la hora de fin.")
             context = get_user_context(request)
+            context["disponibilidad"] = disponibilidad
             return render(request, "doctor/calendario/modificar_disponibilidad.html", context)
 
-        # Validación para evitar conflictos con otras citas existentes:
         disponibilidades_conflictivas = DisponibilidadDoctor.objects.filter(
             doctor=request.user,
-            fecha=nueva_fecha_obj,
+            fecha=disponibilidad.fecha,
             hora_inicio__lte=nueva_hora_fin_obj,
             hora_fin__gte=nueva_hora_inicio_obj
         ).exclude(pk=disponibilidad.pk)
 
         if disponibilidades_conflictivas:
             messages.error(request, "La nueva disponibilidad se superpone con otras citas existentes.")
-            return render(request, "doctor/calendario/modificar_disponibilidad.html", context={})
+            context = get_user_context(request)
+            context["disponibilidad"] = disponibilidad
+            return render(request, "doctor/calendario/modificar_disponibilidad.html", context)
 
-        disponibilidad.fecha = nueva_fecha_obj
         disponibilidad.hora_inicio = nueva_hora_inicio_obj
         disponibilidad.hora_fin = nueva_hora_fin_obj
         disponibilidad.save()
@@ -370,23 +403,82 @@ def modificar_disponibilidad(request, pk):
     else:
         return HttpResponseBadRequest("Método no permitido.")
 
-
 #------CITAS -----
+def seleccionar_doctor(request):
+    if not request.user.groups.filter(name="patient").exists():
+        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
+        return redirect("home")
 
-def appointment_create(request):
-    if request.method == 'POST':
-        form = AppointmentForm(request.POST)
-        if form.is_valid():
-            # Guardar la cita del paciente
-            appointment = form.save(commit=False)
-            appointment.patient = request.user
-            appointment.save()
-            messages.success(request, '¡La cita se ha creado correctamente!')
-            return redirect('home')  # Redireccionar a una vista de éxito
-        else:
-            messages.error(request, '¡Hubo un error al crear la cita!')
+    doctores = CustomUser.objects.filter(groups__name='doctor')
+    context = get_user_context(request)
+    context["doctores"] = doctores
+    return render(request, "Citas/seleccionar_doctor.html", context)
+
+def seleccionar_fecha(request, doctor_id):
+    if not request.user.groups.filter(name="patient").exists():
+        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
+        return redirect("home")
+
+    doctor = get_object_or_404(CustomUser, id=doctor_id, groups__name='doctor')
+    disponibilidades = DisponibilidadDoctor.objects.filter(doctor=doctor)
+    context = get_user_context(request)
+    context["disponibilidades"] = disponibilidades
+    return render(request, "Citas/seleccionar_fecha.html", context)
+
+def seleccionar_turno(request, disponibilidad_id):
+    if not request.user.groups.filter(name="patient").exists():
+        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
+        return redirect("home")
+
+    disponibilidad = get_object_or_404(DisponibilidadDoctor, id=disponibilidad_id)
+    turnos_reservados = Cita.objects.filter(disponibilidad=disponibilidad).values_list('hora_inicio', 'hora_fin')
+    turnos_reservados = [(t[0].strftime("%H:%M:%S"), t[1].strftime("%H:%M:%S")) for t in turnos_reservados]
+
+    turnos_disponibles = disponibilidad.obtener_turnos_disponibles()
+    turnos_disponibles = [turno for turno in turnos_disponibles if (turno[0].strftime("%H:%M:%S"), turno[1].strftime("%H:%M:%S")) not in turnos_reservados]
+
+    context = get_user_context(request)
+    context["disponibilidad"] = disponibilidad
+    context["turnos_disponibles"] = turnos_disponibles
+    return render(request, "Citas/seleccionar_turno.html", context)
+
+
+def agendar_cita(request, disponibilidad_id):
+    if not request.user.groups.filter(name="patient").exists():
+        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
+        return redirect("home")
+
+    disponibilidad = get_object_or_404(DisponibilidadDoctor, id=disponibilidad_id)
+    turno = request.POST.get("turno")
+
+    if turno:
+        inicio, fin = turno.split('-')
+        # Verificar si el turno ya está reservado
+        if Cita.objects.filter(disponibilidad=disponibilidad, hora_inicio=inicio, hora_fin=fin).exists():
+            messages.error(request, "Este turno ya ha sido reservado. Por favor, selecciona otro turno.")
+            return redirect('seleccionar_turno', disponibilidad_id=disponibilidad.id)
+        
+        cita = Cita.objects.create(
+            doctor=disponibilidad.doctor,
+            paciente=request.user,
+            fecha=disponibilidad.fecha,
+            hora_inicio=inicio,
+            hora_fin=fin,
+            disponibilidad=disponibilidad
+        )
+        messages.success(request, "Cita agendada con éxito.")
+        return redirect('detalle_cita', cita_id=cita.id)
     else:
-        form = AppointmentForm()
-    
-    # Si la solicitud es POST pero el formulario no es válido, se renderiza la misma plantilla con el formulario que contiene los errores de validación
-    return render(request, 'Citas/crear_cita.html', {'form': form})
+        messages.error(request, "Debes seleccionar un turno válido.")
+        return redirect('seleccionar_turno', disponibilidad_id=disponibilidad.id)
+
+def detalle_cita(request, cita_id):
+    cita = get_object_or_404(Cita, id=cita_id)
+
+    # Renderizar la plantilla con los detalles de la cita
+
+    context = get_user_context(request)
+    context["cita"] = cita
+    return render(request, 'Citas/detalle_cita.html', context)
+
+

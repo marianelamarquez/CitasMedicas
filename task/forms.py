@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser,DisponibilidadDoctor, Appointment
+from .models import CustomUser,DisponibilidadDoctor
 
 #REGISTRO USUARIO
 class UserRegistrationForm(UserCreationForm):
@@ -31,12 +31,3 @@ class DisponibilidadDoctorForm(forms.ModelForm):
         self.fields["hora_inicio"].widget = forms.TimeInput(format="%H:%M")
         self.fields["hora_fin"].widget = forms.TimeInput(format="%H:%M")
 
-#CITA
-class AppointmentForm(forms.ModelForm):
-    class Meta:
-        model = Appointment
-        fields = ['date', 'start_time']
-        widgets = {
-            'date': forms.DateInput(attrs={'class': 'datepicker'}),
-            'start_time': forms.TimeInput(attrs={'class': 'timepicker'}),
-        }

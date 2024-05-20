@@ -1,68 +1,82 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% block content %}
 <!DOCTYPE html>
 <html lang="es">
-    <head>
+<head>
+    <!-- Custom fonts for this template -->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-        <!-- Custom fonts for this template -->
-        <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
-        <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-    
-        <!-- Custom styles for this template -->
-        <link href="{% static 'css/sb-admin-2.min.css'%}" rel="stylesheet">
-    
-        <!-- Custom styles for this page -->
-        <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
-    
-    </head>
-    {% block content %}
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/sb-admin-2.min.css'%}" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
+</head>
 <body>
-  <!-- Begin Page Content -->
-  <div class="container-fluid">
+<!-- Begin Page Content -->
+<div class="container-fluid">
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">CALENDARIO</h6>
             <div style="text-align: right;">
-              <a href="{% url 'crear-disponibilidad' %}" type="button" class="btn btn-primary  " >Crear disponibilidad</a>  
-                
+                <a href="{% url 'crear-disponibilidad' %}" type="button" class="btn btn-primary">Crear disponibilidad</a>
             </div>
         </div>
-            {% if disponibilidades %}
-            <div class="card-body">
-                <div class="table-responsive">
+        {% if disponibilidades %}
+        <div class="card-body">
+            <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Fecha</th>
                             <th>Hora de inicio</th>
                             <th>Hora de fin</th>
+                            <th>Turnos</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for disponibilidad in disponibilidades %}
-                            <tr>
-                                <td>{{ disponibilidad.fecha }}</td>
-                                <td>{{ disponibilidad.hora_inicio }}</td>
-                                <td>{{ disponibilidad.hora_fin }}</td>
-                                <td>  <a href="{% url 'eliminar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-danger">Eliminar</a>
-                                    <a href="{% url 'modificar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-primary">Modificar</a>
-                                </td>  
-                        
-                            </tr>
+                        <tr>
+                            <td>{{ disponibilidad.fecha }}</td>
+                            <td>{{ disponibilidad.hora_inicio }}</td>
+                            <td>{{ disponibilidad.hora_fin }}</td>
+                            <td>
+                                {% for turno in disponibilidad.turnos_disponibles %}
+                                <p>{{ turno }}</p>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{% url 'eliminar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-danger">Eliminar</a>
+                                <a href="{% url 'modificar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-primary">Modificar</a>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                <!-- Paginación -->
+                <div class="pagination justify-content-center">
+                    <span class="step-links">
+                        {% if disponibilidades.has_previous %}
+                            <a href="?page=1" class="btn  bg-gray-100 btn-icon-split">&laquo; </a>
+                            <a href="?page={{ disponibilidades.previous_page_number }}" class="btn  bg-gray-100 btn-icon-split">anterior</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Página {{ disponibilidades.number }} de {{ disponibilidades.paginator.num_pages }}.
+                        </span>
+                       
+                        {% if disponibilidades.has_next %}
+                            <a href="?page={{ disponibilidades.next_page_number }}" class="btn  bg-gray-100 btn-icon-split">siguiente</a>
+                            <a href="?page={{ disponibilidades.paginator.num_pages }}" class="btn  bg-gray-100 btn-icon-split"> &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
             </div>
         </div>
-    </div>
-
-</div>
-
         {% else %}
         <div class="card-body">
             <div class="table-responsive">
@@ -70,27 +84,25 @@
             </div>
         </div>
         {% endif %}
-
-        {% endblock %}
+    </div>
+</div>
+{% endblock %}
 
 <!-- Bootstrap core JavaScript-->
-<script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
-<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
+<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="{% static 'js/sb-admin-2.min.js'%}"></script>
+<script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
 <!-- Page level plugins -->
-<script src="{% static 'vendor/datatables/jquery.dataTables.min.js'%}"></script>
-<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js'%}"></script>
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
 <!-- Page level custom scripts -->
-<script src="{% static 'js/demo/datatables-demo.js'%}"></script>
-
+<script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 </body>
-
 </html>
-

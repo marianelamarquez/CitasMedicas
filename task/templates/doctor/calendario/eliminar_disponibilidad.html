@@ -1,37 +1,44 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-    <div class="container-fluid">
-        <div class="row justify-content-center mt-5"> <!-- Agregamos una fila y centramos el contenido verticalmente -->
-            <div class="col-md-6"> <!-- Establecemos el ancho de la columna -->
-                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">ELIMINAR DISPONIBILIDAD</h6>
-                    </div>
-                    <div class="card-body">
-                        <body>
+<div class="container-fluid">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary text-center">ELIMINAR DISPONIBILIDAD</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center"> 
+                        <div class="form-group col-md-9">
                             <p>¿Estás seguro de que deseas eliminar la siguiente disponibilidad?</p>
-   
-                           <div>
-                               <p><strong>Fecha:</strong> {{ disponibilidad.fecha }}</p>
-                               <p><strong>Hora de inicio:</strong> {{ disponibilidad.hora_inicio }}</p>
-                               <p><strong>Hora de fin:</strong> {{ disponibilidad.hora_fin }}</p>
-                           </div>
-   
-                           <form class="user" method="post">
-                               {% csrf_token %}
-                               <input type="hidden" name="disponibilidad_id" value="{{ disponibilidad.id }}">
-                               <input type="submit" name="confirmar" class=" btn-user btn btn-danger"  value="Eliminar">
-                               <a href="{% url 'ver_disponibilidad' %}" class=" btn-user btn btn-primary" >Cancelar</a>
-                           </form>
-                       </body>
+                            <div>
+                                <p><strong>Fecha:</strong> {{ disponibilidad.fecha }}</p>
+                                <p><strong>Hora de inicio:</strong> {{ disponibilidad.hora_inicio }}</p>
+                                <p><strong>Hora de fin:</strong> {{ disponibilidad.hora_fin }}</p>
+                            </div>
+                        </div>
                     </div>
-                    
+                    <form class="user" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="disponibilidad_id" value="{{ disponibilidad.id }}">
+                        <input type="hidden" name="confirmar" value="eliminar">
+                        <div class="row justify-content-center"> 
+                            <div class="form-group col-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="{% url 'ver_disponibilidad' %}" class="btn btn-user btn-primary btn-block">Cancelar</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="submit" class="btn btn-user btn-danger btn-block" value="Eliminar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</html>
+</div>
 {% endblock content %}
