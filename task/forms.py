@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser,DisponibilidadDoctor
+from django.contrib.auth.forms import PasswordChangeForm
+
 
 #REGISTRO USUARIO
 class UserRegistrationForm(UserCreationForm):
@@ -18,7 +20,7 @@ class UserRegistrationForm(UserCreationForm):
             if CustomUser.objects.filter(email=email).exists():
                 raise forms.ValidationError("Este correo electrónico ya está en uso. Por favor, utiliza otro.")
             return email
-
+    
 
 #DISPONIBILIDAD DOCTOR
 class DisponibilidadDoctorForm(forms.ModelForm):

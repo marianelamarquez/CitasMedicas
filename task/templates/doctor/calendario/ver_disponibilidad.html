@@ -34,7 +34,7 @@
                             <th>Fecha</th>
                             <th>Hora de inicio</th>
                             <th>Hora de fin</th>
-                            <th>Turnos</th>
+                          
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -44,11 +44,7 @@
                             <td>{{ disponibilidad.fecha }}</td>
                             <td>{{ disponibilidad.hora_inicio }}</td>
                             <td>{{ disponibilidad.hora_fin }}</td>
-                            <td>
-                                {% for turno in disponibilidad.turnos_disponibles %}
-                                <p>{{ turno }}</p>
-                                {% endfor %}
-                            </td>
+                          
                             <td>
                                 <a href="{% url 'eliminar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-danger">Eliminar</a>
                                 <a href="{% url 'modificar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-primary">Modificar</a>

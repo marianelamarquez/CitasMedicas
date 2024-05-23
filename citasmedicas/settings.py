@@ -137,5 +137,3 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'task.CustomUser'
-#AUTH_USER_MODEL = 'task.Doctor'
-#AUTH_USER_MODEL = 'task.Patient'

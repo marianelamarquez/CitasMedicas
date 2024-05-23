@@ -2,14 +2,18 @@ from django.urls import path
 from django.contrib.auth.decorators import login_required
 from task import views
 from .views import Inicio
-#from .views import ListaCitas,CrearCita, ModificarCita, EliminarCita
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', Inicio.as_view(), name='home'),
     path('salir/', views.salir, name='salir'), 
     path('perfilPaciente/<str:username>/', login_required(views.perfilPaciente), name='perfilPaciente'),
     path('perfilDoctor/<str:username>/', login_required(views.perfilDoctor), name='perfilDoctor'),
-      
+    
+    #URLS CAMBIAR CONTRASEñA
+    path('change_password/',login_required( views.ProfilePasswordChangeView.as_view()), name='change_password'),
+ #   path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'), name='password_change_done'),
+
     #URLS DE DOCTOR
     path('RegistroDoctor/',login_required(views.create_doctor),name='RegistroDoctor'),
     path('ListarDoctor/', login_required(views.ListaDoctores.as_view()) , name='ListarDoctor'),

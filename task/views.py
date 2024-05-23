@@ -1,5 +1,4 @@
 import datetime
-from django.utils import timezone
 import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.paginator import Paginator
@@ -7,12 +6,12 @@ from django.contrib.auth import logout, login, authenticate
 from .forms import UserRegistrationForm
 from django.contrib.auth.models import Group
 from .models import CustomUser, Cita, DisponibilidadDoctor
-from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DeleteView
+from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib import messages
-
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth import update_session_auth_hash
 #Para saber que tipo de usuario es y enviar a las vistas
 def get_user_context(request):
     context = {
@@ -56,6 +55,34 @@ class Inicio(TemplateView):
 def salir(request):
     logout(request)
     return redirect('home')
+
+#CAMBIAR CONTRASENAS 
+class ProfilePasswordChangeView( PasswordChangeView):
+    template_name = 'perfil/change_password.html'
+    success_url = reverse_lazy('change_password')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_context = get_user_context(self.request)
+        context.update(user_context)
+        context['password_changed'] = self.request.session.get('password_changed', False)
+        return context
+    
+    def form_valid(self, form) :
+        messages.success(self.request,'Cambio de contraseña exitoso')
+        update_session_auth_hash(self.request, form.user)
+        self.request.session['password_changed']= True
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'No se pudo cambiar la contraseña')
+        return render(self.request, self.template_name, {'form': form})
+    
+
+
+        
+
+
 
 # --------------------------- PACIENTES ---------------------------
 #------Registrar Pacientes----
@@ -480,7 +507,6 @@ def detalle_cita(request, cita_id):
     context = get_user_context(request)
     context["cita"] = cita
     return render(request, 'Citas/detalle_cita.html', context)
-
 
 def mis_citas(request):
     if not request.user.groups.filter(name="patient").exists():
