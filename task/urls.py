@@ -12,7 +12,7 @@ urlpatterns = [
     
     #URLS CAMBIAR CONTRASEñA
     path('change_password/',login_required( views.ProfilePasswordChangeView.as_view()), name='change_password'),
- #   path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'), name='password_change_done'),
+    path('cambio-contraseña-exitoso/', login_required(views.CustomPasswordChangeDoneView.as_view()), name='cambio_contraseña_exitoso'),  # Usa la nueva vista personalizada
 
     #URLS DE DOCTOR
     path('RegistroDoctor/',login_required(views.create_doctor),name='RegistroDoctor'),

@@ -2,7 +2,7 @@ import datetime
 import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.paginator import Paginator
-from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth import logout, login, authenticate,update_session_auth_hash
 from .forms import UserRegistrationForm
 from django.contrib.auth.models import Group
 from .models import CustomUser, Cita, DisponibilidadDoctor
@@ -10,8 +10,10 @@ from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib import messages
-from django.contrib.auth.views import PasswordChangeView
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView
+
+
+
 #Para saber que tipo de usuario es y enviar a las vistas
 def get_user_context(request):
     context = {
@@ -28,7 +30,6 @@ def get_user_context(request):
         context['is_admin'] = True
 
     return context
-
 
 class Inicio(TemplateView):
     template_name = 'home.html'
@@ -59,7 +60,7 @@ def salir(request):
 #CAMBIAR CONTRASENAS 
 class ProfilePasswordChangeView( PasswordChangeView):
     template_name = 'perfil/change_password.html'
-    success_url = reverse_lazy('change_password')
+    success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -79,7 +80,8 @@ class ProfilePasswordChangeView( PasswordChangeView):
         return render(self.request, self.template_name, {'form': form})
     
 
-
+class CustomPasswordChangeDoneView(PasswordChangeDoneView):
+    success_url = reverse_lazy('home') 
         
 
 
