@@ -249,7 +249,7 @@ def perfilDoctor(request, username):
 
 # ---------------------------CALENDARIO ---------------------------
 
-#------DISPONIBILIDAD DEL DOCTOR---
+#---------------------DISPONIBILIDAD DEL DOCTOR------------------
 
 def crear_disponibilidad(request):
     if request.method == "GET":
@@ -432,7 +432,7 @@ def modificar_disponibilidad(request, pk):
     else:
         return HttpResponseBadRequest("Método no permitido.")
 
-#------CITAS -----
+#----------------------------CITAS ----------------------------
 #Vision de Paciente
 def seleccionar_doctor(request):
     if not request.user.groups.filter(name="patient").exists():

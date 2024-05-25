@@ -56,3 +56,7 @@ class Cita(models.Model):
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
     disponibilidad = models.ForeignKey(DisponibilidadDoctor, on_delete=models.CASCADE) 
+    atendida = models.BooleanField(default=False)
+    indicaciones = models.TextField(max_length=2000, blank=True, null=True)
+    recipe = models.TextField(max_length=2000, blank=True, null=True)
+    informe = models.TextField(max_length=10000, blank=True, null=True)

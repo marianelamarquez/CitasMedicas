@@ -19,7 +19,7 @@ urlpatterns = [
     path('ListarDoctor/', login_required(views.ListaDoctores.as_view()) , name='ListarDoctor'),
     path('EditarDoctor/<int:pk>/',login_required( views.EditarDoctor.as_view()), name='EditarDoctor'),
     path('EliminarDoctor/<int:pk>/', login_required(views.EliminarDoctor.as_view()), name='EliminarDoctor'),
-     path('EditarDoctorPerfil/<int:pk>/', login_required(views.EditarDoctorPerfil.as_view()), name='EditarDoctorPerfil'),
+    path('EditarDoctorPerfil/<int:pk>/', login_required(views.EditarDoctorPerfil.as_view()), name='EditarDoctorPerfil'),
     
     #URLS DE PACIETE
 
@@ -47,9 +47,4 @@ urlpatterns = [
     path('doctor/cita/<int:cita_id>/',  login_required(views.detalle_cita_doctor), name='detalle_cita_doctor'),
     path('doctor/eliminar_cita/<int:cita_id>/', login_required(views.eliminar_cita_doctor), name='eliminar_cita_doctor'),
 
-
-    # URLS DE CITAS
-    #path('modificar/<int:pk>/',login_required( ModificarCita.as_view()), name='modificar_cita'),
- 
-    
 ]
