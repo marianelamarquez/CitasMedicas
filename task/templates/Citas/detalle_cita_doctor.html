@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -16,40 +17,90 @@
     
         <!-- Custom styles for this page -->
         <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
-    
+     
     </head>
     <body>
-        <div class="container-fluid " style="max-width: 50%;">
-            <div class="card shadow mb-4">
-                <!-- titulo -->
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary text-center">DETALLES DE LA CITA</h6>
+        <div class="container">
+            <div class="col">
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="row ">
+              
+
+                <div class="col-lg-6">
+                    <div class="card shadow mb-4">
+                        <!-- titulo -->
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary text-center">DETALLES DE LA CITA</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <div class="form-group">
+                                    <p><strong>Paciente:</strong> {{ cita.paciente.get_full_name|upper }}</p>
+                                    <p><strong>Correo Electrónico:</strong> {{ cita.paciente.email }}</p>
+                                    <p><strong>Teléfono:</strong> {{ cita.paciente.telefono }}</p>
+                                    <p><strong>Dirección:</strong> {{ cita.paciente.direccion }}</p>
+                                    <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
+                                    <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
+                                    <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
+                                    <p><strong>Estado:</strong>
+                                        {% if cita.atendida %}
+                                            <span class="badge badge-success">Atendida</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Pendiente</span>
+                                        {% endif %}
+                                    </p>
+    
+                                    <div class="row justify-content-center">
+                                        <a href="{% url 'atender_cita' cita.id %}" class="btn btn-success">Marcar como atendida</a>
+                                    </div>
+                                </div>      
+                                    <div class="row justify-content-center">
+                                        <a href="{% url 'citas_doctor' %}" class="btn btn-primary">Volver a Agendados</a>
+                                    </div>
+                           
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                <div class="row justify-content-center">
-                    <div class="form-group">
+    
+                <div class="col-lg-6">
+                    <div class="card shadow mb-4">
+                        <!-- Card Content - Collapse -->
+                            <div class="card-body">
+                                <form method="post" novalidate>
+                                    {% csrf_token %}
+    
+                                    <div class="form-group">
+                                        <label for="informe" class=" font-weight-bold text-primary ">INFORME</label>
+                                        <textarea class="form-control" id="informe" rows="5" name="informe" placeholder="Escriba el informe aquí">{{ cita.informe }}</textarea>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="recipe" class=" font-weight-bold text-primary">RECIPE</label>
+                                        <textarea class="form-control" id="recipe" rows="5" name="recipe" placeholder="Escriba el recipe aquí">{{ cita.recipe }}</textarea>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="indicaciones" class=" font-weight-bold text-primary ">INDICACIONES</label>
+                                        <textarea class="form-control" id="indicaciones" rows="5" name="indicaciones" placeholder="Escriba las indicaciones aquí">{{ cita.indicaciones }}</textarea>
+                                    </div>
+    
+                                    <div class="row justify-content-center">
+                                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                    </div>
+                                </form>
+                        </div>
+                </div>
+            </div>
+        
+    </body>
 
-    <p><strong>Paciente:</strong> {{ cita.paciente.get_full_name|upper }}</p>
-    <p><strong>Correo Electrónico:</strong> {{ cita.paciente.email }}</p>
-    <p><strong>Teléfono:</strong> {{ cita.paciente.telefono }}</p>
-    <p><strong>Dirección:</strong> {{ cita.paciente.direccion }}</p>
-    <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
-    <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
-    <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
-    <div class="row justify-content-center">
-        <a href="{% url 'citas_doctor' %}"  class="btn btn-primary">Volver a Agendados</a>
-
-    </div>
-</div>
-</div>
-</div>
-</div>
-
-
-</body>
-
-
-
-
-    </html>
-    {% endblock %}
+</html>
+{% endblock %}

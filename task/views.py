@@ -3,7 +3,7 @@ import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.paginator import Paginator
 from django.contrib.auth import logout, login, authenticate,update_session_auth_hash
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm,CitaForm
 from django.contrib.auth.models import Group
 from .models import CustomUser, Cita, DisponibilidadDoctor
 from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
@@ -516,8 +516,10 @@ def mis_citas(request):
         return redirect("home")
 
     citas = Cita.objects.filter(paciente=request.user).select_related('doctor', 'disponibilidad')
+    citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False)
     context = get_user_context(request)
     context["citas"] = citas
+    context["citas_pendientes"] = citas_pendientes
     return render(request, "Citas/mis_citas.html", context)
 
 def eliminar_cita(request, cita_id):
@@ -535,6 +537,25 @@ def eliminar_cita(request, cita_id):
     context = get_user_context(request)
     context["cita"] = cita
     return render(request, 'Citas/eliminar_cita.html', context)
+
+def citas_atendidas_paciente(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    citas_atendidas = Cita.objects.filter(paciente=request.user, atendida=True)
+    context = get_user_context(request)
+    context["citas_atendidas"] = citas_atendidas
+    return render(request, "Citas/consultas_paciente.html", context)
+
+def detalle_cita_paciente(request, cita_id):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    cita = get_object_or_404(Cita, id=cita_id, paciente=request.user)
+    context = get_user_context(request)
+    context["cita"] = cita
+    return render(request, "Citas/detalle_cita_paciente.html", context)
+
 
 #Vision de doctor
 
@@ -556,7 +577,46 @@ def detalle_cita_doctor(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
     context = get_user_context(request)
     context["cita"] = cita
+    context["informe"] = cita.informe
+    context["recipe"] = cita.recipe
+    context["indicaciones"] = cita.indicaciones
+
+    if request.method == 'POST':
+        form = CitaForm(request.POST, instance=cita)
+        if form.is_valid():
+            guardar_cambios(request, cita_id)
+            return redirect('detalle_cita_doctor', cita_id=cita.id)
+
     return render(request, 'Citas/detalle_cita_doctor.html', context)
+
+def guardar_cambios(request, cita_id):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+        return redirect("home")
+
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+    form = CitaForm(request.POST, instance=cita)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Los cambios se han guardado correctamente.")
+        return redirect('detalle_cita_doctor', cita_id=cita.id)
+
+    messages.error(request, "Hubo un error al guardar los cambios.")
+    return redirect('detalle_cita_doctor', cita_id=cita.id)
+
+def atender_cita(request, cita_id):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+        return redirect("home")
+
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+
+    cita.atendida = True
+    cita.save()
+
+    messages.success(request, "Cita marcada como atendida con éxito.")
+    return redirect('detalle_cita_doctor', cita_id=cita.id)
 
 def eliminar_cita_doctor(request, cita_id):
     if not request.user.groups.filter(name="doctor").exists():

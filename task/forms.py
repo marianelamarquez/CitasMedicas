@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser,DisponibilidadDoctor
+from .models import CustomUser,DisponibilidadDoctor,Cita
 from django.contrib.auth.forms import PasswordChangeForm
 
 
@@ -33,3 +33,8 @@ class DisponibilidadDoctorForm(forms.ModelForm):
         self.fields["hora_inicio"].widget = forms.TimeInput(format="%H:%M")
         self.fields["hora_fin"].widget = forms.TimeInput(format="%H:%M")
 
+
+class CitaForm(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = ['informe', 'recipe', 'indicaciones']

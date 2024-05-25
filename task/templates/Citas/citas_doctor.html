@@ -36,6 +36,7 @@
           <th>Hora de Inicio</th>
           <th>Hora de Fin</th>
           <th>Paciente</th>
+          <th>Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -46,6 +47,13 @@
             <td>{{ cita.hora_inicio }}</td>
             <td>{{ cita.hora_fin }}</td>
             <td>{{ cita.paciente.get_full_name|upper }}</td>
+            <td>
+              {% if cita.atendida %}
+                <span class="badge badge-success">Atendida</span>
+              {% else %}
+                <span class="badge badge-warning">Pendiente</span>
+              {% endif %}
+          </td>
             <td>
               <a href="{% url 'detalle_cita_doctor' cita.id %}" class="btn btn-primary">Ver Detalles</a>
               <a href="{% url 'eliminar_cita_doctor' cita.id %}" class="btn btn-danger">Eliminar</a>
