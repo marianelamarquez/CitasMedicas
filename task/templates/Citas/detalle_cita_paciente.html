@@ -21,19 +21,17 @@
 </head>
 
 <body>
-    <div class="container">
+   
+    <div class="container" style="max-width: 80%;">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary text-center">INFORMACIÓN DE LA CITA</h6>
+                <h6 class="m-0 font-weight-bold text-primary text-center">DETALLES DE LA CITA</h6>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Paciente:</strong> {{ cita.paciente.get_full_name|upper }}</p>
                         <p><strong>Doctor:</strong> {{ cita.doctor.first_name|upper|add:" "}}{{ cita.doctor.last_name|upper }}</p>
-                        <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
-                        <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
-                        <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
                         <p><strong>Estado:</strong> {% if cita.atendida %}
                             <span class="badge badge-success">Atendida</span>
                         {% else %}
@@ -41,14 +39,63 @@
                         {% endif %}</p>
                     </div>
                     <div class="col-md-6">
-                      
-                        <p><strong>Indicaciones:</strong></p>
-                        <p>{{ cita.indicaciones }}</p>
-                        <p><strong>Receta:</strong></p>
-                        <p>{{ cita.recipe }}</p>
-                        <p><strong>Informe:</strong></p>
-                        <p>{{ cita.informe }}</p>
+                        <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
+                        <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
+                        <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
                     </div>
+                
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary text-center">INFORME</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="form-group">
+                            <p>{{ cita.informe }}</p>
+                        </div>
+                    </div>
+                 
+                    
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary text-center">RECIPE</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="form-group">
+                            <p>{{ cita.recipe }}</p>
+                        </div>
+                    </div>
+                 
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary text-center">INDICACIONES</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="form-group">
+                            <p>{{ cita.indicaciones }}</p>
+                        </div>
+                    </div>
+                 
+                    
                 </div>
             </div>
         </div>
@@ -57,7 +104,6 @@
             <a href="{% url 'consultas_paciente' %}" class="btn btn-primary">Volver a la Lista</a>
         </div>
   
-
 </body>
 </html>
 {% endblock %}

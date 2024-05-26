@@ -79,7 +79,6 @@ class ProfilePasswordChangeView( PasswordChangeView):
         messages.error(self.request, 'No se pudo cambiar la contraseña')
         return render(self.request, self.template_name, {'form': form})
     
-
 class CustomPasswordChangeDoneView(PasswordChangeDoneView):
     success_url = reverse_lazy('home') 
         
@@ -564,7 +563,7 @@ def citas_doctor(request):
         messages.error(request, "No tienes permisos para ver esta página.")
         return redirect("home")
 
-    citas = Cita.objects.filter(doctor=request.user).select_related('paciente', 'disponibilidad')
+    citas = Cita.objects.filter(doctor=request.user, atendida=False).select_related('paciente', 'disponibilidad')
     context = get_user_context(request)
     context["citas"] = citas
     return render(request, "Citas/citas_doctor.html", context)
@@ -633,3 +632,35 @@ def eliminar_cita_doctor(request, cita_id):
     context = get_user_context(request)
     context["cita"] = cita
     return render(request, 'Citas/eliminar_cita_doctor.html', context)
+
+#HISTORIA
+
+def doctor_historial(request):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+        return redirect("home")
+
+    citas_atendidas = Cita.objects.filter(doctor=request.user, atendida=True)
+    context = get_user_context(request)
+    context["citas_atendidas"] = citas_atendidas
+    return render(request, "Citas/doctor_historial.html", context)
+
+def detalle_cita_doctor_historial(request, cita_id):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para ver esta página.")
+        return redirect("home")
+
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+    context = get_user_context(request)
+    context["cita"] = cita
+    context["informe"] = cita.informe
+    context["recipe"] = cita.recipe
+    context["indicaciones"] = cita.indicaciones
+
+    if request.method == 'POST':
+        form = CitaForm(request.POST, instance=cita)
+        if form.is_valid():
+            guardar_cambios(request, cita_id)
+            return redirect('detalle_cita_doctor_historial', cita_id=cita.id)
+
+    return render(request, 'Citas/detalle_cita_doctor_historial.html', context)
