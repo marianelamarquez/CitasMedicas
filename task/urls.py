@@ -11,9 +11,8 @@ urlpatterns = [
     path('perfilDoctor/<str:username>/', login_required(views.perfilDoctor), name='perfilDoctor'),
     
     #URLS CAMBIAR CONTRASEñA
-    path('change_password/',login_required( views.ProfilePasswordChangeView.as_view()), name='change_password'),
-    path('cambio-contraseña-exitoso/', login_required(views.CustomPasswordChangeDoneView.as_view()), name='cambio_contraseña_exitoso'),  # Usa la nueva vista personalizada
-
+    path('change_password/', login_required(views.ProfilePasswordChangeView.as_view()), name='change_password'),
+  
     #URLS DE DOCTOR
     path('RegistroDoctor/',login_required(views.create_doctor),name='RegistroDoctor'),
     path('ListarDoctor/', login_required(views.ListaDoctores.as_view()) , name='ListarDoctor'),

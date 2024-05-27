@@ -58,30 +58,28 @@ def salir(request):
     return redirect('home')
 
 #CAMBIAR CONTRASENAS 
-class ProfilePasswordChangeView( PasswordChangeView):
+class ProfilePasswordChangeView(PasswordChangeView):
     template_name = 'perfil/change_password.html'
-    success_url = reverse_lazy('home')
-
+    success_url = reverse_lazy('change_password') 
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_context = get_user_context(self.request)
+        user_context = get_user_context(self.request) 
         context.update(user_context)
         context['password_changed'] = self.request.session.get('password_changed', False)
         return context
-    
-    def form_valid(self, form) :
-        messages.success(self.request,'Cambio de contraseña exitoso')
+
+    def form_valid(self, form):
+        form.save()
         update_session_auth_hash(self.request, form.user)
-        self.request.session['password_changed']= True
-        return super().form_valid(form)
-    
+        self.request.session['password_changed'] = True
+        messages.success(self.request, 'Cambio de contraseña exitoso')
+        return self.render_to_response(self.get_context_data(form=form))
+
     def form_invalid(self, form):
         messages.error(self.request, 'No se pudo cambiar la contraseña')
-        return render(self.request, self.template_name, {'form': form})
+        return self.render_to_response(self.get_context_data(form=form))
     
-class CustomPasswordChangeDoneView(PasswordChangeDoneView):
-    success_url = reverse_lazy('home') 
-        
 
 
 

@@ -24,7 +24,7 @@
         <div class="card shadow mb-4">
                                 <!-- titulo -->
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">CONSULTAS CITAS ATENDIDAS</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">CITAS ATENDIDAS</h6>
                                 </div>
 
         {% if citas_atendidas %}
@@ -34,8 +34,6 @@
                 <thead>
                     <tr>
                         <th>Fecha</th>
-                        <th>Hora de Inicio</th>
-                        <th>Hora de Fin</th>
                         <th>Doctor</th>
                         <th>Estado</th>
                         <th>Acciones</th>
@@ -45,8 +43,6 @@
                     {% for cita in citas_atendidas %}
                         <tr>
                             <td>{{ cita.fecha }}</td>
-                            <td>{{ cita.hora_inicio }}</td>
-                            <td>{{ cita.hora_fin }}</td>
                             <td>{{ cita.doctor.get_full_name|upper }}</td>
                             <td>
                                 {% if cita.atendida %}

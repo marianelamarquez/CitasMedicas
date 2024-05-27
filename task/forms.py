@@ -33,7 +33,7 @@ class DisponibilidadDoctorForm(forms.ModelForm):
         self.fields["hora_inicio"].widget = forms.TimeInput(format="%H:%M")
         self.fields["hora_fin"].widget = forms.TimeInput(format="%H:%M")
 
-
+#CITA
 class CitaForm(forms.ModelForm):
     class Meta:
         model = Cita
