@@ -459,8 +459,14 @@ def seleccionar_fecha(request, doctor_id):
     doctor = get_object_or_404(CustomUser, id=doctor_id, groups__name='doctor')
     hoy = timezone.now().date()
     disponibilidades = DisponibilidadDoctor.objects.filter(doctor=doctor, fecha__gte=hoy)
+   
+   
+    # Crear una lista de fechas disponibles en formato JSON
+    fechas_disponibles = [disponibilidad.fecha.strftime("%Y-%m-%d") for disponibilidad in disponibilidades]
+
     context = get_user_context(request)
     context["disponibilidades"] = disponibilidades
+    context["fechas_disponibles"] = json.dumps(fechas_disponibles)  # Convertir a JSON
     return render(request, "Citas/seleccionar_fecha.html", context)
 
 def seleccionar_turno(request, disponibilidad_id):
@@ -531,7 +537,8 @@ def mis_citas(request):
         return redirect("home")
 
     citas = Cita.objects.filter(paciente=request.user).select_related('doctor', 'disponibilidad')
-    citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False)
+    citas_pendientes = citas.filter(atendida=False)
+    
     context = get_user_context(request)
     context["citas"] = citas
     context["citas_pendientes"] = citas_pendientes

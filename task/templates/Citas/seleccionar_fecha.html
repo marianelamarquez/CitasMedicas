@@ -18,42 +18,83 @@
     
         <!-- Custom styles for this page -->
         <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
+           <!-- Incluye el CSS de Flatpickr -->
+    <link rel="stylesheet" href="{% static 'flatpickr/flatpickr.min.css' %}">
  
 </head>
 <body>
-    <div class="container-fluid " style="max-width: 40%;"  >
-        
+    <div class="container-fluid" style="max-width: 40%;">
         <div class="card shadow mb-4">
-            <!-- titulo -->
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary text-center">SELECCIONAR FECHA</h6>
             </div>
-                    <!-- contenido -->
-                <div class="card-body">
-                    <div class="container">
-                        <div class="text-center">
-                            
-                                {% for disponibilidad in disponibilidades %}
-                                <div class="row justify-content-center">
-                                    <div class="form-group">
-                                        <li  style="list-style-type: none;"><a href="{% url 'seleccionar_turno' disponibilidad.id %}" class="btn btn-user btn-primary btn-sm">{{ disponibilidad.fecha }}</a></li>
-
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            
-                                <div class="row justify-content-center">
-                                    <div class="form-group">
-                            <a href="{% url 'seleccionar_doctor' %}" class="btn btn-user btn-secondary btn-sm">Regresar</a>
-                          
-                                    </div>
-                                </div>
-                
+            <div class="card-body">
+                <div class="container">
+                    <div class="text-center">
+                        <div class="form-group">
+                            <input type="text" id="fecha" class="form-control" placeholder="Seleccionar fecha">
                         </div>
+                        <div id="disponibilidad-links" class="d-none">
+                            {% for disponibilidad in disponibilidades %}
+                            <div class="row justify-content-center">
+                                <div class="form-group">
+                                    <li style="list-style-type: none;">
+                                        <a href="{% url 'seleccionar_turno' disponibilidad.id %}" 
+                                           class="btn btn-user btn-primary btn-sm fecha-link" 
+                                           data-fecha="{{ disponibilidad.fecha|date:'Y-m-d' }}">{{ disponibilidad.fecha }}</a>
+                                    </li>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="form-group">
+                                <a href="{% url 'seleccionar_doctor' %}" class="btn btn-user btn-secondary btn-sm">Regresar</a>
+                                <button id="siguiente-btn" class="btn btn-user btn-primary btn-sm" disabled>Siguiente</button>
+                            </div>
+                        </div>
+                        <div id="debug-info" style="display:none; color:red;"></div>
                     </div>
-                </div>         
+                </div>
+            </div>
         </div>
-   
+
+     
+    <script src="{% static 'flatpickr/flatpickr.min.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const fechasDisponibles = JSON.parse('{{ fechas_disponibles|safe|escapejs }}');
+            let selectedDate = null;
+
+            flatpickr("#fecha", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                enable: fechasDisponibles,
+                onChange: function(selectedDates, dateStr, instance) {
+                    selectedDate = selectedDates.length > 0 ? selectedDates[0].toISOString().split('T')[0] : null;
+                    document.getElementById('siguiente-btn').disabled = !selectedDate;
+                    document.getElementById('debug-info').innerText = `Selected Date: ${selectedDate}`; // Debug info
+                }
+            });
+
+            document.getElementById('siguiente-btn').addEventListener('click', function() {
+                if (selectedDate) {
+                    const link = document.querySelector(`.fecha-link[data-fecha="${selectedDate}"]`);
+                    if (link) {
+                        window.location.href = link.getAttribute('href');
+                    } else {
+                        alert("No hay disponibilidad para la fecha seleccionada.");
+                        document.getElementById('debug-info').style.display = 'block';
+                        document.getElementById('debug-info').innerText += `\nSelected Date: ${selectedDate}`; // Debug info
+                        const allLinks = document.querySelectorAll('.fecha-link');
+                        allLinks.forEach(l => {
+                            document.getElementById('debug-info').innerText += `\nLink Data-fecha: ${l.getAttribute('data-fecha')}`; // Debug info
+                        });
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 {% endblock %}

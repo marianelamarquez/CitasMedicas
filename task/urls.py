@@ -35,6 +35,7 @@ urlpatterns = [
     path("modificar-disponibilidad<int:pk>/", login_required(views.modificar_disponibilidad), name="modificar_disponibilidad"),
 
     #URLS DE CITAS   
+    #Paciente
     path('seleccionar-doctor/', views.seleccionar_doctor, name='seleccionar_doctor'),
     path('seleccionar-fecha/<int:doctor_id>/', views.seleccionar_fecha, name='seleccionar_fecha'),
     path('seleccionar-turno/<int:disponibilidad_id>/', login_required( views.seleccionar_turno), name='seleccionar_turno'),
@@ -42,18 +43,20 @@ urlpatterns = [
     path('detalle-cita/<int:cita_id>/', login_required( views.detalle_cita), name='detalle_cita'),
     path('mis_citas/', login_required(views.mis_citas), name='mis_citas'),
     path('eliminar_cita/<int:cita_id>/',  login_required(views.eliminar_cita), name='eliminar_cita'),
+    
+    #Consultas
+    path('consultas-paciente/', login_required(views.citas_atendidas_paciente), name='consultas_paciente'),
+    path('detalle-cita-paciente/<int:cita_id>/', login_required(views.detalle_cita_paciente), name='detalle_cita_paciente'),
+  
+    #Doctor
     path('doctor/citas/',  login_required(views.citas_doctor), name='citas_doctor'),
     path('doctor/cita/<int:cita_id>/',  login_required(views.detalle_cita_doctor), name='detalle_cita_doctor'),
     path('doctor/eliminar_cita/<int:cita_id>/', login_required(views.eliminar_cita_doctor), name='eliminar_cita_doctor'),
-
-    
-    path('doctor/historial',  login_required(views.doctor_historial), name='doctor_historial'),
-    path('doctor/cita/historial/<int:cita_id>/',  login_required(views.detalle_cita_doctor_historial), name='detalle_cita_doctor_historial'),
-
     path('cita/<int:cita_id>/atender/',  login_required(views.atender_cita), name='atender_cita'),
     
-    path('consultas-paciente/', login_required(views.citas_atendidas_paciente), name='consultas_paciente'),
-    path('detalle-cita-paciente/<int:cita_id>/', login_required(views.detalle_cita_paciente), name='detalle_cita_paciente'),
+    #Historial
+    path('doctor/historial',  login_required(views.doctor_historial), name='doctor_historial'),
+    path('doctor/cita/historial/<int:cita_id>/',  login_required(views.detalle_cita_doctor_historial), name='detalle_cita_doctor_historial'),
     path('eliminar-cita-historial/<int:cita_id>/', login_required(views.eliminar_cita_historial), name='eliminar_cita_historial'),
-
+    
 ]
