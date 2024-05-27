@@ -1,4 +1,5 @@
 import datetime
+from django.utils import timezone
 import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.paginator import Paginator
@@ -314,8 +315,9 @@ def ver_disponibilidad(request):
     if not request.user.groups.filter(name="doctor").exists():
         messages.error(request, "No tienes permisos para ver tu disponibilidad.")
         return redirect("home")
-
-    disponibilidades_list = DisponibilidadDoctor.objects.filter(doctor=request.user).order_by('fecha')
+    
+    hoy = timezone.now().date()
+    disponibilidades_list = DisponibilidadDoctor.objects.filter(doctor=request.user, fecha__gte=hoy).order_by('fecha')
 
     paginator = Paginator(disponibilidades_list, 10)  # Muestra 10 disponibilidades por página
 
@@ -437,8 +439,16 @@ def seleccionar_doctor(request):
         return redirect("home")
 
     doctores = CustomUser.objects.filter(groups__name='doctor')
+    
+    # Verificar si el paciente tiene citas pendientes con cada doctor y filtrar los doctores disponibles
+    doctores_disponibles = []
+    for doctor in doctores:
+        citas_pendientes = Cita.objects.filter(paciente=request.user, doctor=doctor, atendida=False)
+        if not citas_pendientes.exists():
+            doctores_disponibles.append(doctor)
+
     context = get_user_context(request)
-    context["doctores"] = doctores
+    context["doctores"] = doctores_disponibles
     return render(request, "Citas/seleccionar_doctor.html", context)
 
 def seleccionar_fecha(request, doctor_id):
@@ -447,7 +457,8 @@ def seleccionar_fecha(request, doctor_id):
         return redirect("home")
 
     doctor = get_object_or_404(CustomUser, id=doctor_id, groups__name='doctor')
-    disponibilidades = DisponibilidadDoctor.objects.filter(doctor=doctor)
+    hoy = timezone.now().date()
+    disponibilidades = DisponibilidadDoctor.objects.filter(doctor=doctor, fecha__gte=hoy)
     context = get_user_context(request)
     context["disponibilidades"] = disponibilidades
     return render(request, "Citas/seleccionar_fecha.html", context)
@@ -475,6 +486,13 @@ def agendar_cita(request, disponibilidad_id):
         return redirect("home")
 
     disponibilidad = get_object_or_404(DisponibilidadDoctor, id=disponibilidad_id)
+    hoy = timezone.now().date()
+
+    # Verifica que la fecha de la disponibilidad no haya pasado
+    if disponibilidad.fecha < hoy:
+        messages.error(request, "No puedes agendar una cita en una fecha pasada.")
+        return redirect('seleccionar_doctor')
+
     turno = request.POST.get("turno")
 
     if turno:
@@ -662,3 +680,19 @@ def detalle_cita_doctor_historial(request, cita_id):
             return redirect('detalle_cita_doctor_historial', cita_id=cita.id)
 
     return render(request, 'Citas/detalle_cita_doctor_historial.html', context)
+
+
+def eliminar_cita_historial(request, cita_id):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+        return redirect("home")
+
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+    if request.method == 'POST':
+        cita.delete()
+        messages.success(request, "Historial eliminado con éxito.")
+        return redirect('doctor_historial')
+    context = get_user_context(request)
+    context["cita"] = cita
+    return render(request, "Citas/eliminar_cita_historial.html", context)
+

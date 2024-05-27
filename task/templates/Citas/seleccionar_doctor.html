@@ -25,7 +25,15 @@
         <h6 class="m-0 font-weight-bold text-primary text-center">SELECCIONAR DOCTOR</h6>
     </div>
   <div class="card-body">
+
   <div class="container">
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
     <div class="dropdown text-center"> <!-- Agregar la clase text-center aquí -->
       <div class="form-group">
       <button class="btn btn-primary dropdown-toggle " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

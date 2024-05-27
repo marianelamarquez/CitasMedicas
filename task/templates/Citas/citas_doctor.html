@@ -28,6 +28,14 @@
   
   {% if citas %}
   <div class="card-body">
+
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     <div class="table-responsive">
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
     <thead>

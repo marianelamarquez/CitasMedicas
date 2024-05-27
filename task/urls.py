@@ -54,5 +54,6 @@ urlpatterns = [
     
     path('consultas-paciente/', login_required(views.citas_atendidas_paciente), name='consultas_paciente'),
     path('detalle-cita-paciente/<int:cita_id>/', login_required(views.detalle_cita_paciente), name='detalle_cita_paciente'),
+    path('eliminar-cita-historial/<int:cita_id>/', login_required(views.eliminar_cita_historial), name='eliminar_cita_historial'),
 
 ]

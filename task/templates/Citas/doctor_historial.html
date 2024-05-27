@@ -32,6 +32,13 @@
 
         {% if citas_atendidas %}
         <div class="card-body">
+            {% if messages %}
+             <ul>
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+         </ul>
+          {% endif %} 
             <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
@@ -56,6 +63,8 @@
                             </td>
                             <td>
                                 <a href="{% url 'detalle_cita_doctor_historial' cita.id %}" class="btn btn-primary">Ver Detalles</a>
+                                <a href="{% url 'eliminar_cita_historial' cita.id %}" class="btn btn-danger">Eliminar</a>
+
                             </td>
                         </tr>
                     {% endfor %}

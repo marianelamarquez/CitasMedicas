@@ -30,8 +30,16 @@
                                   </div>
                             </div>
 
-                            {% if citas %}
+                    {% if cita %}
                             <div class="card-body">
+
+                                {% if messages %}
+                                <ul>
+                                    {% for message in messages %}
+                                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                                 <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
@@ -69,13 +77,13 @@
                             </div>
                         </div>
                       
-                            {% else %}
+                    {% else %}
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <h1>No tienes citas agendadas</h1>
                                 </div>
                             </div>       
-                            {% endif %}
+                    {% endif %}
     </div>
 
 {% endblock %}
