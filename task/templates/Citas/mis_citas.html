@@ -55,9 +55,9 @@
                                     <tbody>
                                         {% for cita in citas_pendientes %}
                                             <tr>
-                                                <td>{{ cita.disponibilidad.fecha }}</td>
-                                                <td>{{ cita.disponibilidad.hora_inicio }}</td>
-                                                <td>{{ cita.disponibilidad.hora_fin }}</td>
+                                                <td>{{ cita.fecha }}</td>
+                                                <td>{{ cita.hora_inicio }}</td>
+                                                <td>{{ cita.hora_fin }}</td>
                                                 <td>{{ cita.doctor.get_full_name|upper }}</td>
                                                 <td>
                                                     {% if cita.atendida %}
