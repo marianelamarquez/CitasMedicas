@@ -58,7 +58,10 @@
                                     </p>
     
                                     <div class="row justify-content-center">
-                                        <a href="{% url 'doctor_historial' %}" class="btn btn-primary">Volver a Historial</a>
+                                        <form class="user">
+                                            <a href="{% url 'doctor_historial' %}" class="btn btn-primary btn-user">Regresar</a>
+
+                                        </form>
                                     </div>
                                 </div>      
                                    
@@ -72,7 +75,7 @@
                     <div class="card shadow mb-4">
                         <!-- Card Content - Collapse -->
                             <div class="card-body">
-                                <form method="post" novalidate>
+                                <form class="user" method="post" novalidate>
                                     {% csrf_token %}
     
                                     <div class="form-group">
@@ -91,7 +94,7 @@
                                     </div>
     
                                     <div class="row justify-content-center">
-                                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                        <button type="submit" class="btn btn-primary btn-user">Guardar Cambios</button>
                                     </div>
                                 </form>
                         </div>

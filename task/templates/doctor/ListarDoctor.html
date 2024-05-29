@@ -17,6 +17,7 @@
     <!-- Custom styles for this page -->
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
 
+  
 </head>
 {% block content %}
 
@@ -24,13 +25,18 @@
                 <div class="container-fluid">
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
+                     <form class="user">
+
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">LISTA DE DOCTORES</h6>
                             <div style="text-align: right;">
-                              <a href="{% url 'RegistroDoctor' %}" type="button" class="btn btn-primary  " >REGISTRAR DOCTOR</a>  
+                                <a href="{% url 'RegistroDoctor' %}" type="button" class="btn btn-user btn-primary  " >REGISTRAR DOCTOR</a>  
                                 
+                               
                             </div>
                         </div>
+                   
+
                         {% if Usuario %}
                         <div class="card-body">
                             <div class="table-responsive">
@@ -58,8 +64,9 @@
                                                 <td>{{ usuario.email }}</td>
                                                 <td>{{ usuario.ncolegiom }}</td>
                                                 <td>
-                                                    <a href="{% url 'EditarDoctor' usuario.pk %}" class="btn btn-primary">Editar</a>
-                                                    <a href="{% url 'EliminarDoctor' usuario.pk %}" class="btn btn-danger">Eliminar</a>
+                                                        <a href="{% url 'EditarDoctor' usuario.pk %}" class="btn btn-primary btn-user btn-circle"><i class="fa-solid fa-gear" style="color: #ffffff;"></i></a>
+                                                        <a href="{% url 'EliminarDoctor' usuario.pk %}" class="btn btn-danger btn-user btn-circle"><i class="fa-solid fa-trash-can" style="color: #f1f2f3;"></i></a>
+                                                    
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -69,9 +76,11 @@
                                 </table>
                             </div>
                         </div>
+                    </form>
+
                     </div>
 
-                </div>
+                
                 <!-- /.container-fluid -->
 
                 {% else %}

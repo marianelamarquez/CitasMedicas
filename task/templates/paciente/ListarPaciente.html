@@ -61,9 +61,12 @@
                                             <td>{{ usuario.email }}</td>
                                             <td>{{ usuario.direccion }}</td>
                                             <td>
-                                                <a href="{% url 'EditarPaciente' usuario.pk %}" class="btn btn-primary">Editar</a>
-                                                <a href="{% url 'EliminarPaciente' usuario.pk %}"  class="btn btn-danger">Eliminar</a>
-                                            </td>
+                                                <form class="user">
+                                                    <a href="{% url 'EditarPaciente' usuario.pk %}" class="btn btn-user btn-primary btn-circle"><i class="fa-solid fa-gear" style="color: #ffffff;"></i></a>
+                                                    <a href="{% url 'EliminarPaciente' usuario.pk %}"  class="btn btn-user btn-danger btn-circle"><i class="fa-solid fa-trash-can" style="color: #f1f2f3;"></i></a>
+                                                
+                                                </form>
+                                              </td>
                                         </tr>
                                     </tbody>
 
@@ -73,7 +76,7 @@
                         </div>
                     </div>
 
-                </div>
+                
                 <!-- /.container-fluid -->
 
                 {% else %}

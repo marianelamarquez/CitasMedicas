@@ -20,10 +20,11 @@
 <div class="container-fluid">
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
+        <form class="user">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">CALENDARIO</h6>
             <div style="text-align: right;">
-                <a href="{% url 'crear-disponibilidad' %}" type="button" class="btn btn-primary">Crear disponibilidad</a>
+                <a href="{% url 'crear-disponibilidad' %}" type="button" class="btn btn-primary btn-user">Crear disponibilidad</a>
             </div>
         </div>
         {% if messages %}
@@ -54,8 +55,8 @@
                             <td>{{ disponibilidad.hora_fin }}</td>
                           
                             <td>
-                                <a href="{% url 'eliminar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-danger ">Eliminar</a>
-                                <a href="{% url 'modificar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-primary ">Modificar</a>
+                                <a href="{% url 'modificar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-primary btn-circle"><i class="fa-solid fa-gear" style="color: #ffffff;"></i></a>
+                                <a href="{% url 'eliminar_disponibilidad' disponibilidad.pk %}" class="btn-user btn btn-danger btn-circle"><i class="fa-solid fa-trash-can" style="color: #f1f2f3;"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -90,6 +91,7 @@
         {% endif %}
     
 <!-- Aqui deberia cerrar un div pero queda mal si lo pongo-->
+</form>
 </div>
 {% endblock %}
 

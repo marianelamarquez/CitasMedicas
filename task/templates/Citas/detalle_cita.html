@@ -34,7 +34,10 @@
                     <p>Hora de inicio: {{ cita.hora_inicio }}</p>
                     <p>Hora de fin: {{ cita.hora_fin }}</p>
                     <div class="row justify-content-center">
-                    <a href="{% url 'mis_citas' %}" class="btn btn-primary">Cerrar</a>
+                        <form class="user">
+                            <a href="{% url 'mis_citas' %}" class="btn btn-primary btn-user">Cerrar</a>
+                        </form>
+                   
                 </div>
 
                 </div>

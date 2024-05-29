@@ -63,8 +63,8 @@
               {% endif %}
           </td>
             <td>
-              <a href="{% url 'detalle_cita_doctor' cita.id %}" class="btn btn-primary">Ver Detalles</a>
-              <a href="{% url 'eliminar_cita_doctor' cita.id %}" class="btn btn-danger">Eliminar</a>
+              <a href="{% url 'detalle_cita_doctor' cita.id %}" class="btn btn-primary btn-user btn-circle"><i class="fa-solid fa-file-lines" style="color: #ffffff;"></i></a>
+              <a href="{% url 'eliminar_cita_doctor' cita.id %}" class="btn btn-danger btn-user btn-circle"><i class="fa-solid fa-trash-can" style="color: #f1f2f3;"></i></a>
             </td>
           </tr>
         {% endfor %}

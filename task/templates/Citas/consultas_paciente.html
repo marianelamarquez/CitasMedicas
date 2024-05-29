@@ -36,7 +36,7 @@
                         <th>Fecha</th>
                         <th>Doctor</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th>Detalles</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,7 +53,7 @@
                             </td>
                          
                             <td>
-                                <a href="{% url 'detalle_cita_paciente' cita.id %}" class="btn btn-primary">Ver Detalles</a>
+                                <a href="{% url 'detalle_cita_paciente' cita.id %}" class="btn btn-primary btn-circle"><i class="fa-solid fa-file-lines" style="color: #ffffff;"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

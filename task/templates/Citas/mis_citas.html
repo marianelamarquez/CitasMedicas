@@ -17,15 +17,16 @@
 
     <!-- Custom styles for this page -->
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
-
+ 
 </head>
 <div class="container-fluid ">
     <div class="card shadow mb-4">
+        <form class="user">
                             <!-- titulo -->
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">MIS CITAS</h6>
                                 <div style="text-align: right;">
-                                    <a href="{% url 'seleccionar_doctor' %}" type="button" class="btn btn-primary  " >AGENDAR CITA</a>  
+                                    <a href="{% url 'seleccionar_doctor' %}" type="button" class="btn btn-primary btn-user " >AGENDAR CITA</a>  
                                       
                                   </div>
                             </div>
@@ -67,8 +68,8 @@
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    <a href="{% url 'detalle_cita' cita.id %}" class="btn btn-primary">Ver Detalles</a>
-                                                    <a href="{% url 'eliminar_cita' cita.id %}" class="btn btn-danger">Eliminar</a>
+                                                    <a href="{% url 'detalle_cita' cita.id %}" class="btn btn-primary btn-circle btn-user "><i class="fa-solid fa-eye" style="color: #ffffff;"></i></a>
+                                                    <a href="{% url 'eliminar_cita' cita.id %}" class="btn btn-danger btn-circle btn-user "><i class="fa-solid fa-trash-can" style="color: #f1f2f3;"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -84,6 +85,8 @@
                                 </div>
                             </div>       
                     {% endif %}
+                </form>
+
     </div>
 
 {% endblock %}
