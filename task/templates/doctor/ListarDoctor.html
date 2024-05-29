@@ -57,9 +57,9 @@
                                      <tbody>
                                             <tr>
                                                 <td>{{ usuario.id }}</td>
-                                                <td>{{ usuario.username }}</td>
-                                                <td>{{ usuario.first_name }}</td>
-                                                <td>{{ usuario.last_name }}</td>
+                                                <td>{{ usuario.username|capfirst }}</td>
+                                                <td>{{ usuario.first_name|capfirst }}</td>
+                                                <td>{{ usuario.last_name|capfirst }}</td>
                                                 <td>{{ usuario.telefono }}</td>
                                                 <td>{{ usuario.email }}</td>
                                                 <td>{{ usuario.ncolegiom }}</td>

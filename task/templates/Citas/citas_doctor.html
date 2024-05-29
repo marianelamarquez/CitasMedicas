@@ -54,7 +54,8 @@
             <td>{{ cita.fecha }}</td>
             <td>{{ cita.hora_inicio }}</td>
             <td>{{ cita.hora_fin }}</td>
-            <td>{{ cita.paciente.get_full_name|upper }}</td>
+            <td>  {{ cita.paciente.first_name|capfirst|add:" "}}{{ cita.paciente.last_name|capfirst }}</td>
+          
             <td>
               {% if cita.atendida %}
                 <span class="badge badge-success">Atendida</span>

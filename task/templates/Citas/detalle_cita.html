@@ -29,7 +29,7 @@
             <div class="card-body">
             <div class="row justify-content-center">
                 <div class="form-group">
-                    <p>Doctor:{{ cita.doctor.first_name|upper|add:" "}}{{ cita.doctor.last_name|upper }}</p> 
+                    <p>Doctor:{{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}</p> 
                     <p>Fecha: {{ cita.fecha }}</p>
                     <p>Hora de inicio: {{ cita.hora_inicio }}</p>
                     <p>Hora de fin: {{ cita.hora_fin }}</p>

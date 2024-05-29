@@ -54,12 +54,12 @@
                                     <tbody>
                                         <tr>
                                             <td> {{ usuario.id }}</td>
-                                            <td> {{ usuario.username }}</td>
-                                            <td>{{ usuario.first_name }}</td>
-                                            <td>{{ usuario.last_name }}</td>
+                                            <td> {{ usuario.username|capfirst }}</td>
+                                            <td>{{ usuario.first_name|capfirst }}</td>
+                                            <td>{{ usuario.last_name|capfirst }}</td>
                                             <td>{{ usuario.telefono }}</td>
                                             <td>{{ usuario.email }}</td>
-                                            <td>{{ usuario.direccion }}</td>
+                                            <td>{{ usuario.direccion|capfirst }}</td>
                                             <td>
                                                 <form class="user">
                                                     <a href="{% url 'EditarPaciente' usuario.pk %}" class="btn btn-user btn-primary btn-circle"><i class="fa-solid fa-gear" style="color: #ffffff;"></i></a>

@@ -42,7 +42,7 @@
                         <div class="card-body">
                             <div class="row justify-content-center">
                                 <div class="form-group">
-                                    <p><strong>Paciente:</strong> {{ cita.paciente.get_full_name|upper }}</p>
+                                    <p><strong>Paciente:</strong> {{ cita.paciente.first_name|capfirst|add:" "}}{{ cita.paciente.last_name|capfirst }}</p>
                                     <p><strong>Correo Electrónico:</strong> {{ cita.paciente.email }}</p>
                                     <p><strong>Teléfono:</strong> {{ cita.paciente.telefono }}</p>
                                     <p><strong>Dirección:</strong> {{ cita.paciente.direccion }}</p>

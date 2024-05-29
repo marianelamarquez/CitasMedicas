@@ -28,11 +28,11 @@
                 <div class="row justify-content-center">
                     <div class="form-group">
                 <p>¿Estás seguro de que deseas eliminar esta cita?</p>
-                <p><strong>Doctor:</strong> {{ cita.doctor.get_full_name|upper }}</p>
+                <p><strong>Doctor:</strong> {{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}</p>
                 <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
                 <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
                 <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
-                
+                {{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}
                 <form class="user" method="post">
                     {% csrf_token %}
                     <div class="row justify-content-center">

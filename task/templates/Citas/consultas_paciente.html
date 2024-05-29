@@ -43,7 +43,7 @@
                     {% for cita in citas_atendidas %}
                         <tr>
                             <td>{{ cita.fecha }}</td>
-                            <td>{{ cita.doctor.get_full_name|upper }}</td>
+                            <td>{{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}</td>
                             <td>
                                 {% if cita.atendida %}
                                   <span class="badge badge-success">Atendida</span>
