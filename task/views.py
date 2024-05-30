@@ -317,7 +317,7 @@ def ver_disponibilidad(request):
         return redirect("home")
     
     hoy = timezone.now().date()
-    disponibilidades_list = DisponibilidadDoctor.objects.filter(doctor=request.user, fecha__gte=hoy).order_by('fecha')
+    disponibilidades_list = DisponibilidadDoctor.objects.filter(doctor=request.user, fecha__gte=hoy).order_by('-fecha')
 
     paginator = Paginator(disponibilidades_list, 10)  # Muestra 10 disponibilidades por página
 
@@ -536,7 +536,7 @@ def mis_citas(request):
         messages.error(request, "Solo los pacientes pueden acceder a esta página.")
         return redirect("home")
 
-    citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False, falto=False).order_by('fecha').select_related('doctor', 'disponibilidad')
+    citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False, falto=False).order_by('-fecha').select_related('doctor', 'disponibilidad')
 
     context = get_user_context(request)
     context["citas_pendientes"] = citas_pendientes
@@ -565,7 +565,7 @@ def citas_atendidas_paciente(request):
     citas_atendidas = Cita.objects.filter(paciente=request.user, atendida=True)
     citas_perdidas = Cita.objects.filter(paciente=request.user, falto=True)
    
-    citas = (citas_atendidas | citas_perdidas).order_by('fecha')
+    citas = (citas_atendidas | citas_perdidas).order_by('-fecha')
 
     context = get_user_context(request)
     context["citas"] = citas
@@ -587,7 +587,7 @@ def citas_doctor(request):
     if not request.user.groups.filter(name="doctor").exists():
         messages.error(request, "No tienes permisos para ver esta página.")
         return redirect("home")
-    citas = Cita.objects.filter(doctor=request.user, atendida=False, falto=False).order_by('fecha').select_related('paciente', 'disponibilidad')
+    citas = Cita.objects.filter(doctor=request.user, atendida=False, falto=False).order_by('-fecha').select_related('paciente', 'disponibilidad')
     context = get_user_context(request)
     context["citas"] = citas
     return render(request, "Citas/citas_doctor.html", context)
@@ -681,7 +681,7 @@ def doctor_historial(request):
     citas_perdidas = Cita.objects.filter(doctor=request.user, falto=True)
     
     # Unir los queryset y ordenar por fecha
-    citas = (citas_atendidas | citas_perdidas).order_by('fecha')
+    citas = (citas_atendidas | citas_perdidas).order_by('-fecha')
     context = get_user_context(request)
     context["citas"] = citas
     return render(request, "Citas/doctor_historial.html", context)
