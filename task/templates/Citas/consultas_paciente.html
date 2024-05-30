@@ -27,7 +27,7 @@
                                     <h6 class="m-0 font-weight-bold text-primary">CITAS ATENDIDAS</h6>
                                 </div>
 
-        {% if citas_atendidas %}
+        {% if citas %}
         <div class="card-body">
             <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -40,15 +40,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for cita in citas_atendidas %}
+                    {% for cita in citas %}
                         <tr>
                             <td>{{ cita.fecha }}</td>
                             <td>{{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}</td>
                             <td>
                                 {% if cita.atendida %}
-                                  <span class="badge badge-success">Atendida</span>
-                                {% else %}
-                                  <span class="badge badge-warning">Pendiente</span>
+                                <span class="badge badge-success">Atendida</span>
+                                {% elif cita.falto %}
+                                <span class="badge badge-danger">Perdida</span>
                                 {% endif %}
                             </td>
                          

@@ -32,11 +32,16 @@
                     <div class="col-md-6">
                         <p><strong>Paciente:</strong> {{ cita.paciente.first_name|capfirst|add:" "}}{{ cita.paciente.last_name|capfirst }}</p>
                         <p><strong>Doctor:</strong> {{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}</p>
-                        <p><strong>Estado:</strong> {% if cita.atendida %}
-                            <span class="badge badge-success">Atendida</span>
-                        {% else %}
-                            <span class="badge badge-warning">Pendiente</span>
-                        {% endif %}</p>
+                        <p><strong>Estado:</strong> 
+                            {% if cita.falto %}
+                            <span class="badge badge-danger">Perdida</span>
+                                {% elif cita.atendida %}
+                                    <span class="badge badge-success">Atendida</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Pendiente</span>
+                                
+                            {% endif %}
+                    </p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Fecha:</strong> {{ cita.fecha }}</p>

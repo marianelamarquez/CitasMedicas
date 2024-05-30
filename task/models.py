@@ -60,3 +60,4 @@ class Cita(models.Model):
     indicaciones = models.TextField(max_length=2000, blank=True, null=True)
     recipe = models.TextField(max_length=2000, blank=True, null=True)
     informe = models.TextField(max_length=10000, blank=True, null=True)
+    falto = models.BooleanField(default=False)

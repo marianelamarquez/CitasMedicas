@@ -50,10 +50,13 @@
                                     <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
                                     <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
                                     <p><strong>Estado:</strong>
-                                        {% if cita.atendida %}
-                                            <span class="badge badge-success">Atendida</span>
-                                        {% else %}
-                                            <span class="badge badge-warning">Pendiente</span>
+                                        {% if cita.falto %}
+                                        <span class="badge badge-danger">Perdida</span>
+                                            {% elif cita.atendida %}
+                                                <span class="badge badge-success">Atendida</span>
+                                            {% else %}
+                                                <span class="badge badge-warning">Pendiente</span>
+                                            
                                         {% endif %}
                                     </p>
     

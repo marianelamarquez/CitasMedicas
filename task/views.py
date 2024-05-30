@@ -536,11 +536,9 @@ def mis_citas(request):
         messages.error(request, "Solo los pacientes pueden acceder a esta página.")
         return redirect("home")
 
-    citas = Cita.objects.filter(paciente=request.user).select_related('doctor', 'disponibilidad')
-    citas_pendientes = citas.filter(atendida=False)
-    
+    citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False, falto=False).order_by('fecha').select_related('doctor', 'disponibilidad')
+
     context = get_user_context(request)
-    context["citas"] = citas
     context["citas_pendientes"] = citas_pendientes
     return render(request, "Citas/mis_citas.html", context)
 
@@ -565,8 +563,12 @@ def citas_atendidas_paciente(request):
         return redirect("login")
 
     citas_atendidas = Cita.objects.filter(paciente=request.user, atendida=True)
+    citas_perdidas = Cita.objects.filter(paciente=request.user, falto=True)
+   
+    citas = (citas_atendidas | citas_perdidas).order_by('fecha')
+
     context = get_user_context(request)
-    context["citas_atendidas"] = citas_atendidas
+    context["citas"] = citas
     return render(request, "Citas/consultas_paciente.html", context)
 
 def detalle_cita_paciente(request, cita_id):
@@ -585,8 +587,7 @@ def citas_doctor(request):
     if not request.user.groups.filter(name="doctor").exists():
         messages.error(request, "No tienes permisos para ver esta página.")
         return redirect("home")
-
-    citas = Cita.objects.filter(doctor=request.user, atendida=False).select_related('paciente', 'disponibilidad')
+    citas = Cita.objects.filter(doctor=request.user, atendida=False, falto=False).order_by('fecha').select_related('paciente', 'disponibilidad')
     context = get_user_context(request)
     context["citas"] = citas
     return render(request, "Citas/citas_doctor.html", context)
@@ -656,6 +657,19 @@ def eliminar_cita_doctor(request, cita_id):
     context["cita"] = cita
     return render(request, 'Citas/eliminar_cita_doctor.html', context)
 
+def perdio_cita(request, cita_id):
+    if not request.user.groups.filter(name="doctor").exists():
+        messages.error(request, "No tienes permisos para realizar esta acción.")
+        return redirect("home")
+
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+
+    cita.falto = True
+    cita.save()
+
+    messages.success(request, "Cita marcada perdida con éxito.")
+    return redirect('detalle_cita_doctor', cita_id=cita.id)
+
 #HISTORIA
 
 def doctor_historial(request):
@@ -664,8 +678,12 @@ def doctor_historial(request):
         return redirect("home")
 
     citas_atendidas = Cita.objects.filter(doctor=request.user, atendida=True)
+    citas_perdidas = Cita.objects.filter(doctor=request.user, falto=True)
+    
+    # Unir los queryset y ordenar por fecha
+    citas = (citas_atendidas | citas_perdidas).order_by('fecha')
     context = get_user_context(request)
-    context["citas_atendidas"] = citas_atendidas
+    context["citas"] = citas
     return render(request, "Citas/doctor_historial.html", context)
 
 def detalle_cita_doctor_historial(request, cita_id):
