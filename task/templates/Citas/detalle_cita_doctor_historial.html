@@ -83,17 +83,17 @@
     
                                     <div class="form-group">
                                         <label for="informe" class=" font-weight-bold text-primary ">INFORME</label>
-                                        <textarea class="form-control" id="informe" rows="5" name="informe" placeholder="Escriba el informe aquí">{{ cita.informe }}</textarea>
+                                        <textarea class="form-control" id="informe" rows="5" name="informe" placeholder="Escriba el informe aquí">{{ cita.informe|default_if_none:'' }}</textarea>
                                     </div>
     
                                     <div class="form-group">
                                         <label for="recipe" class=" font-weight-bold text-primary">RECIPE</label>
-                                        <textarea class="form-control" id="recipe" rows="5" name="recipe" placeholder="Escriba el recipe aquí">{{ cita.recipe }}</textarea>
+                                        <textarea class="form-control" id="recipe" rows="5" name="recipe" placeholder="Escriba el recipe aquí">{{ cita.recipe|default_if_none:'' }}</textarea>
                                     </div>
     
                                     <div class="form-group">
                                         <label for="indicaciones" class=" font-weight-bold text-primary ">INDICACIONES</label>
-                                        <textarea class="form-control" id="indicaciones" rows="5" name="indicaciones" placeholder="Escriba las indicaciones aquí">{{ cita.indicaciones }}</textarea>
+                                        <textarea class="form-control" id="indicaciones" rows="5" name="indicaciones" placeholder="Escriba las indicaciones aquí">{{ cita.indicaciones|default_if_none:'' }}</textarea>
                                     </div>
     
                                     <div class="row justify-content-center">
