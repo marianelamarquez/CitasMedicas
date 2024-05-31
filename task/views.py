@@ -119,25 +119,30 @@ class ListaPacientes(ListView):
     model= CustomUser
     template_name='paciente/ListarPaciente.html'
     context_object_name= 'Usuario'
-
+    def test_func(self):
+        return self.request.user.groups.filter(name='admin').exists()
     def get_queryset(self):
         return  CustomUser.objects.filter(groups__name='patient')
     
 #-----EDITAR PACIENTE----
+#admin
 class EditarPaciente(UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'telefono', 'email','direccion']  
     template_name = 'paciente/EditarPaciente.html' 
     success_url = reverse_lazy('ListarPaciente')   
-
+    def test_func(self):
+        return self.request.user.groups.filter(name='admin').exists()
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
+   
 class EditarPacientePerfil(UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'telefono', 'email','direccion']  
     template_name = 'perfil/EditarPacientePerfil.html'
+    def test_func(self):
+        return self.request.user.groups.filter(name='patient').exists()
     def get_success_url(self):
         return reverse_lazy('perfilPaciente', kwargs={'username': self.request.user.username})  
 
@@ -152,12 +157,16 @@ class EliminarPaciente(DeleteView):
     model = CustomUser
     template_name = 'paciente/EliminarPaciente.html'  
     success_url = reverse_lazy('ListarPaciente')   
-
+    def test_func(self):
+        return self.request.user.groups.filter(name='admin').exists()
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
 #-----Perfil Paciente---
 def perfilPaciente(request, username):
+    if not request.user.groups.filter(name="patient").exists():
+     return redirect("home")
+    
     user = get_object_or_404(CustomUser, username=username)
     context = get_user_context(request)
     context['user'] = user
@@ -170,7 +179,11 @@ def perfilPaciente(request, username):
 
 #------Registar Doctores---
 def create_doctor(request):
+        if not request.user.groups.filter(name="admin").exists():
+                return redirect("home") 
+               
         if request.method == 'POST':
+           
             user_form = UserRegistrationForm(request.POST)
             grupo = Group.objects.get(name="doctor")
 
@@ -200,6 +213,9 @@ class ListaDoctores(ListView):
     template_name='doctor/ListarDoctor.html'
     context_object_name= 'Usuario'
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='admin').exists()
+
     def get_queryset(self):
         return  CustomUser.objects.filter(groups__name='doctor')
    
@@ -208,21 +224,24 @@ class EditarDoctorPerfil(UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'telefono', 'email','direccion','ncolegiom']  
     template_name = 'perfil/EditarDoctorPerfil.html'
+    def test_func(self):
+        return self.request.user.groups.filter(name='doctor').exists()
     def get_success_url(self):
         return reverse_lazy('perfilDoctor', kwargs={'username': self.request.user.username})  
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['username'] = self.request.user.username
         context.update(get_user_context(self.request)) 
         return context
-
+   
+#editar doc admin
 class EditarDoctor(UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'telefono', 'email','direccion','ncolegiom']  
     template_name = 'doctor/EditarDoctor.html' 
     success_url = reverse_lazy('ListarDoctor')   
-
+    def test_func(self):
+        return self.request.user.groups.filter(name='admin').exists()
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
@@ -233,12 +252,17 @@ class EliminarDoctor(DeleteView):
     model = CustomUser
     template_name = 'doctor/EliminarDoctor.html'  
     success_url = reverse_lazy('ListarDoctor')   
-
+    def test_func(self):
+        return self.request.user.groups.filter(name='admin').exists()
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
 #----Perfil Doctor---
 def perfilDoctor(request, username):
+    if not request.user.groups.filter(name="doctor").exists():
+        return redirect("home") 
+    
     user = get_object_or_404(CustomUser, username=username)
     context = get_user_context(request)
     context['user'] = user
@@ -253,7 +277,6 @@ def crear_disponibilidad(request):
     if request.method == "GET":
         # Verificar si el usuario pertenece al grupo 'doctor'
         if not request.user.groups.filter(name="doctor").exists():
-            messages.error(request, "No tienes permisos para crear disponibilidad.")
             return redirect("home")
 
         # Obtener fechas con disponibilidad ya creada
@@ -313,7 +336,6 @@ def crear_disponibilidad(request):
 
 def ver_disponibilidad(request):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para ver tu disponibilidad.")
         return redirect("home")
     
     hoy = timezone.now().date()
@@ -349,7 +371,6 @@ def ver_disponibilidad(request):
 
 def eliminar_disponibilidad(request, pk):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para eliminar disponibilidad.")
         return redirect("home")
 
     disponibilidad = get_object_or_404(DisponibilidadDoctor, pk=pk, doctor=request.user)
@@ -373,7 +394,6 @@ def eliminar_disponibilidad(request, pk):
 
 def modificar_disponibilidad(request, pk):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para modificar disponibilidad.")
         return redirect("home")
 
     disponibilidad = get_object_or_404(DisponibilidadDoctor, pk=pk, doctor=request.user)
@@ -435,7 +455,6 @@ def modificar_disponibilidad(request, pk):
 #Vision de Paciente
 def seleccionar_doctor(request):
     if not request.user.groups.filter(name="patient").exists():
-        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
         return redirect("home")
 
     doctores = CustomUser.objects.filter(groups__name='doctor')
@@ -453,7 +472,6 @@ def seleccionar_doctor(request):
 
 def seleccionar_fecha(request, doctor_id):
     if not request.user.groups.filter(name="patient").exists():
-        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
         return redirect("home")
 
     doctor = get_object_or_404(CustomUser, id=doctor_id, groups__name='doctor')
@@ -471,7 +489,6 @@ def seleccionar_fecha(request, doctor_id):
 
 def seleccionar_turno(request, disponibilidad_id):
     if not request.user.groups.filter(name="patient").exists():
-        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
         return redirect("home")
 
     disponibilidad = get_object_or_404(DisponibilidadDoctor, id=disponibilidad_id)
@@ -488,7 +505,6 @@ def seleccionar_turno(request, disponibilidad_id):
 
 def agendar_cita(request, disponibilidad_id):
     if not request.user.groups.filter(name="patient").exists():
-        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
         return redirect("home")
 
     disponibilidad = get_object_or_404(DisponibilidadDoctor, id=disponibilidad_id)
@@ -523,17 +539,15 @@ def agendar_cita(request, disponibilidad_id):
         return redirect('seleccionar_turno', disponibilidad_id=disponibilidad.id)
 
 def detalle_cita(request, cita_id):
+    if not request.user.groups.filter(name="patient").exists():
+        return redirect("home")
     cita = get_object_or_404(Cita, id=cita_id)
-
-    # Renderizar la plantilla con los detalles de la cita
-
     context = get_user_context(request)
     context["cita"] = cita
     return render(request, 'Citas/detalle_cita.html', context)
 
 def mis_citas(request):
     if not request.user.groups.filter(name="patient").exists():
-        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
         return redirect("home")
 
     citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False, falto=False).order_by('-fecha').select_related('doctor', 'disponibilidad')
@@ -544,7 +558,6 @@ def mis_citas(request):
 
 def eliminar_cita(request, cita_id):
     if not request.user.groups.filter(name="patient").exists():
-        messages.error(request, "Solo los pacientes pueden acceder a esta página.")
         return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, paciente=request.user)
@@ -559,8 +572,8 @@ def eliminar_cita(request, cita_id):
     return render(request, 'Citas/eliminar_cita.html', context)
 
 def citas_atendidas_paciente(request):
-    if not request.user.is_authenticated:
-        return redirect("login")
+    if not request.user.groups.filter(name="patient").exists():
+        return redirect("home")
 
     citas_atendidas = Cita.objects.filter(paciente=request.user, atendida=True)
     citas_perdidas = Cita.objects.filter(paciente=request.user, falto=True)
@@ -572,8 +585,8 @@ def citas_atendidas_paciente(request):
     return render(request, "Citas/consultas_paciente.html", context)
 
 def detalle_cita_paciente(request, cita_id):
-    if not request.user.is_authenticated:
-        return redirect("login")
+    if not request.user.groups.filter(name="patient").exists():
+        return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, paciente=request.user)
     context = get_user_context(request)
@@ -585,7 +598,6 @@ def detalle_cita_paciente(request, cita_id):
 
 def citas_doctor(request):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para ver esta página.")
         return redirect("home")
     citas = Cita.objects.filter(doctor=request.user, atendida=False, falto=False).order_by('-fecha').select_related('paciente', 'disponibilidad')
     context = get_user_context(request)
@@ -594,7 +606,6 @@ def citas_doctor(request):
 
 def detalle_cita_doctor(request, cita_id):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para ver esta página.")
         return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
@@ -614,7 +625,6 @@ def detalle_cita_doctor(request, cita_id):
 
 def guardar_cambios(request, cita_id):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para realizar esta acción.")
         return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
@@ -630,7 +640,6 @@ def guardar_cambios(request, cita_id):
 
 def atender_cita(request, cita_id):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para realizar esta acción.")
         return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
@@ -643,7 +652,6 @@ def atender_cita(request, cita_id):
 
 def eliminar_cita_doctor(request, cita_id):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para realizar esta acción.")
         return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
@@ -659,7 +667,6 @@ def eliminar_cita_doctor(request, cita_id):
 
 def perdio_cita(request, cita_id):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para realizar esta acción.")
         return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
@@ -674,7 +681,6 @@ def perdio_cita(request, cita_id):
 
 def doctor_historial(request):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para realizar esta acción.")
         return redirect("home")
 
     citas_atendidas = Cita.objects.filter(doctor=request.user, atendida=True)
@@ -688,7 +694,6 @@ def doctor_historial(request):
 
 def detalle_cita_doctor_historial(request, cita_id):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para ver esta página.")
         return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
@@ -706,10 +711,8 @@ def detalle_cita_doctor_historial(request, cita_id):
 
     return render(request, 'Citas/detalle_cita_doctor_historial.html', context)
 
-
 def eliminar_cita_historial(request, cita_id):
     if not request.user.groups.filter(name="doctor").exists():
-        messages.error(request, "No tienes permisos para realizar esta acción.")
         return redirect("home")
 
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
