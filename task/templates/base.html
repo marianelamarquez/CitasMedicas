@@ -50,7 +50,7 @@
                     <span>INICIO</span></a>
             </li>
 
-            {% if is_patient or user.is_superuser or is_admin %}
+            {% if is_patient %}
              <!-- Divider -->
              <hr class="sidebar-divider">
             <!-- Heading -->
@@ -73,7 +73,8 @@
                     <span>Consultas</span></a>
             </li>
         {% endif %}
-        {% if is_doctor or is_admin or user.is_superuser %}
+        
+        {% if is_doctor %}
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -124,8 +125,7 @@
                         <a class="collapse-item" href="{% url 'ListarPaciente' %}">Pacientes</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Datos:</h6>
-                        <a class="collapse-item" href="#">Exportar BDD</a>
-                        <a class="collapse-item" href="#">Importar BDD</a>
+                        <a class="collapse-item" href="{% url 'adminBD' %}"> BDD</a>
                        
                     </div>
                 </div>

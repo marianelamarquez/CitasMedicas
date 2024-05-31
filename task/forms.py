@@ -38,3 +38,7 @@ class CitaForm(forms.ModelForm):
     class Meta:
         model = Cita
         fields = ['informe', 'recipe', 'indicaciones']
+
+#BDD
+class UploadFileForm(forms.Form):
+    file = forms.FileField()

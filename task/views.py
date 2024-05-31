@@ -1,10 +1,14 @@
 import datetime
 from django.utils import timezone
 import json
+import os
+import shutil
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.paginator import Paginator
 from django.contrib.auth import logout, login, authenticate,update_session_auth_hash
-from .forms import UserRegistrationForm,CitaForm
+from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
+from .forms import UserRegistrationForm,CitaForm, UploadFileForm
 from django.contrib.auth.models import Group
 from .models import CustomUser, Cita, DisponibilidadDoctor
 from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
@@ -724,3 +728,56 @@ def eliminar_cita_historial(request, cita_id):
     context["cita"] = cita
     return render(request, "Citas/eliminar_cita_historial.html", context)
 
+
+
+#RESPALDO Y RESTAURACION 
+
+@staff_member_required
+def admin_db_view(request):
+    form = UploadFileForm()
+    return render(request, 'adminBD.html', {'form': form})
+
+@staff_member_required
+def database_backup(request):
+    db_path = settings.DATABASES['default']['NAME']
+    backup_filename = f"backup_{timezone.now().strftime('%Y%m%d%H%M%S')}.sqlite3"
+    backup_filepath = settings.MEDIA_ROOT / backup_filename
+
+    # Asegurarse de que el directorio MEDIA_ROOT exista
+    os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+
+    try:
+        shutil.copyfile(db_path, backup_filepath)
+        with open(backup_filepath, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename={backup_filename}'
+            return response
+    except Exception as e:
+        return HttpResponse(f"Error al generar el backup de la base de datos: {str(e)}", status=500)
+    finally:
+        if backup_filepath.exists():
+            backup_filepath.unlink()
+
+@staff_member_required
+def database_restore(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            backup_file = request.FILES['file']
+            db_path = settings.DATABASES['default']['NAME']
+            temp_backup_path = settings.MEDIA_ROOT / 'temp_restore.sqlite3'
+
+            try:
+                with open(temp_backup_path, 'wb+') as destination:
+                    for chunk in backup_file.chunks():
+                        destination.write(chunk)
+                shutil.copyfile(temp_backup_path, db_path)
+                return HttpResponse("Base de datos restaurada exitosamente.")
+            except Exception as e:
+                return HttpResponse(f"Error al restaurar la base de datos: {str(e)}", status=500)
+            finally:
+                if temp_backup_path.exists():
+                    temp_backup_path.unlink()
+    else:
+        form = UploadFileForm()
+    return render(request, 'backup_restore.html', {'form': form})

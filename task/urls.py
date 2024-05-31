@@ -62,4 +62,9 @@ urlpatterns = [
     path('doctor/cita/historial/<int:cita_id>/',  login_required(views.detalle_cita_doctor_historial), name='detalle_cita_doctor_historial'),
     path('eliminar-cita-historial/<int:cita_id>/', login_required(views.eliminar_cita_historial), name='eliminar_cita_historial'),
     
+
+    #RESPALDO Y RESTAURACION    
+    path('db/', login_required(views.admin_db_view), name='adminBD'),
+    path('backup/', login_required(views.database_backup), name='database_backup'),
+    path('restore/', login_required(views.database_restore), name='database_restore'),
 ]
