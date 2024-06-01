@@ -33,7 +33,7 @@ def get_user_context(request):
         context['is_patient'] = True
     elif request.user.groups.filter(name='admin').exists():
         context['is_admin'] = True
-
+  
     return context
 
 class Inicio(TemplateView):
@@ -50,12 +50,12 @@ class Inicio(TemplateView):
         elif self.request.user.groups.filter(name='patient').exists():
             is_patient = True
         elif self.request.user.groups.filter(name='admin').exists():
-            is_patient = True
+            is_admin = True
 
         context['is_admin'] = is_admin
         context['is_doctor'] = is_doctor
         context['is_patient'] = is_patient
-
+      
         return context
 
 def salir(request):

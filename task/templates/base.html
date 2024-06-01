@@ -73,7 +73,7 @@
                     <span>Consultas</span></a>
             </li>
         {% endif %}
-        
+
         {% if is_doctor %}
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -111,25 +111,24 @@
                 Administrador
             </div>
             <!-- Nav Item - Administrador -->
-                
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fa-regular fa-folder-open"></i>
-                    <span>Opciones</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Usuarios:</h6>
-                        <a class="collapse-item" href="{% url 'ListarDoctor' %}" >Doctores</a>
-                        <a class="collapse-item" href="{% url 'ListarPaciente' %}">Pacientes</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Datos:</h6>
-                        <a class="collapse-item" href="{% url 'adminBD' %}"> BDD</a>
-                       
-                    </div>
-                </div>
+                <a class="nav-link" href="{% url 'ListarDoctor' %}">
+                    <i class="fa-solid fa-user-doctor"></i>
+                    <span>Doctores</span></a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'ListarPaciente' %}">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Pacientes</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'adminBD' %}">
+                    <i class="fa-solid fa-database"></i>
+                    <span>BDD</span></a>
+            </li>
+            
             {% endif %}
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -218,7 +217,6 @@
 
         <!-- Footer -->
         {% include "footer.html" %}
-                <!-- Lo tenia aqui y solo se me veia bien el home, en los otros se veia en el lado -->
         
         <!-- End of Footer -->
     </div>
