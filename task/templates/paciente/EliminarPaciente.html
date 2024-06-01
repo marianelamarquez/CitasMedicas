@@ -9,14 +9,31 @@
               <h6 class="m-0 font-weight-bold text-primary">ELIMINAR PACIENTE</h6>
           </div>
           <div class="card-body">
-              <form method="POST">
-                  <p>¿Estás seguro de que quieres eliminar este paciente?</p>
+            <div class="row justify-content-center">
+              <div class="form-group">
+            <p>¿Estás seguro de que quieres eliminar este paciente?</p>
+
+              <form class="user" method="POST">
                   {% csrf_token %}
+                  <div class="row justify-content-center">
+                    <div class="form-group col-md-9">
+                        <div class="row">
                   <input type="hidden" name="pk" value="{{ object.pk }}">
-                  <a href="{% url 'ListarPaciente' %}" type="button" class="btn-user btn btn-primary">Cancelar</a> 
-                  <button type="submit" class="btn-user btn btn-danger">Eliminar</button>
+                  <div class="col-md-6">
+
+                  <a href="{% url 'ListarPaciente' %}" type="button" class="btn-user btn btn-primary btn-block">Cancelar</a> 
+                </div>
+                  
+                  <div class="col-md-6">
+                  <button type="submit" class="btn-user btn btn-danger btn-block">Eliminar</button>
+                  </div>
+                </div>
+                  </div>
+                  </div>
               </form>
           </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

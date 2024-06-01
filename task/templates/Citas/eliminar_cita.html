@@ -18,34 +18,46 @@
         <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
     
     </head>
-    <div class="container-fluid " style="max-width: 50%;">
-        <div class="card shadow mb-4">
+<div class="container-fluid">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
             <!-- titulo -->
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary text-center">ELIMINAR CITA</h6>
-            </div>
+                    <h6 class="m-0 font-weight-bold text-primary text-center">ELIMINAR CITA</h6>
+                </div>
+
             <div class="card-body">
                 <div class="row justify-content-center">
                     <div class="form-group">
-                <p>¿Estás seguro de que deseas eliminar esta cita?</p>
-                <p><strong>Doctor:</strong> {{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}</p>
-                <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
-                <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
-                <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
-                {{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}
-                <form class="user" method="post">
-                    {% csrf_token %}
-                    <div class="row justify-content-center">
-                        <button type="submit" class="btn-user btn btn-danger" >Eliminar</button>
-                        <a href="{% url 'mis_citas' %}" type="button" class="btn-user btn btn-primary">Cancelar</a>
+                        <p>¿Estás seguro de que deseas eliminar esta cita?</p>
+                        <p><strong>Doctor:</strong> {{ cita.doctor.first_name|capfirst|add:" "}}{{ cita.doctor.last_name|capfirst }}</p>
+                        <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
+                        <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
+                        <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
+
+                        <form class="user" method="post">
+                            {% csrf_token %}
+                            <div class="row justify-content-center">
+                                <div class="form-group col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a href="{% url 'mis_citas' %}" type="button" class="btn-user btn btn-primary btn-block">Cancelar</a>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn-user btn btn-danger btn-block" >Eliminar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                  
-                </form>
+       
+                </div>
             </div>
         </div>
-    </div>
-
-</div>
+    
 
 </html>
 {% endblock %}

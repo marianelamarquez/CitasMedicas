@@ -42,10 +42,12 @@
                         <div class="card-body">
                             <div class="row justify-content-center">
                                 <div class="form-group">
-                                    <p><strong>Paciente:</strong> {{ cita.paciente.first_name|capfirst|add:" "}}{{ cita.paciente.last_name|capfirst }}</p>
-                                    <p><strong>Correo Electrónico:</strong> {{ cita.paciente.email }}</p>
+                                    
+                                    <p><strong>Nombre del Paciente:</strong> {{ cita.paciente.first_name|capfirst  }}</p>
+                                    <p><strong>Apellido del Paciente:</strong> {{ cita.paciente.last_name|capfirst }}</p>
+                                    <p><strong>Correo Electrónico:</strong> {{ cita.paciente.email|capfirst }}</p>
                                     <p><strong>Teléfono:</strong> {{ cita.paciente.telefono }}</p>
-                                    <p><strong>Dirección:</strong> {{ cita.paciente.direccion }}</p>
+                                    <p><strong>Dirección:</strong> {{ cita.paciente.direccion|capfirst }}</p>
                                     <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
                                     <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
                                     <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
@@ -59,13 +61,14 @@
                                             
                                         {% endif %}
                                     </p>
-    
+                                    <br><br><br><br><br>
                                     <div class="row justify-content-center">
                                         <form class="user">
                                             <a href="{% url 'doctor_historial' %}" class="btn btn-primary btn-user">Regresar</a>
 
                                         </form>
                                     </div>
+                                    
                                 </div>      
                                    
                            

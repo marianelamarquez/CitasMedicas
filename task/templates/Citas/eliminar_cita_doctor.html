@@ -27,20 +27,30 @@
           <div class="card-body">
               <div class="row justify-content-center">
                   <div class="form-group">
-  <p>¿Estás seguro de que deseas eliminar esta cita?</p>
-  <p><strong>Paciente:</strong> {{ cita.paciente.first_name|capfirst|add:" "}}{{ cita.paciente.last_name|capfirst }}</p>
-  <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
-  <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
-  <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
-  
-  <form class="user" method="post">
-    {% csrf_token %}
-    <div class="row justify-content-center">
-    <button type="submit"class="btn-user btn btn-danger">Eliminar</button>
-    <a href="{% url 'citas_doctor' %}"  type="button" class="btn-user btn btn-primary">Cancelar</a>
-  </div>
+                        <p>¿Estás seguro de que deseas eliminar esta cita?</p>
+                        <p><strong>Paciente:</strong> {{ cita.paciente.first_name|capfirst|add:" "}}{{ cita.paciente.last_name|capfirst }}</p>
+                        <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
+                        <p><strong>Hora de Inicio:</strong> {{ cita.hora_inicio }}</p>
+                        <p><strong>Hora de Fin:</strong> {{ cita.hora_fin }}</p>
+                        
+                        <form class="user" method="post">
+                            {% csrf_token %}
+                            <div class="row justify-content-center">
+                                <div class="form-group col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a href="{% url 'citas_doctor' %}"  type="button" class="btn-user btn btn-primary btn-block">Cancelar</a>
+                                        </div>
 
-  </form>
+                                        <div class="col-md-6">
+                                        <button type="submit"class="btn-user btn btn-danger btn-block">Eliminar</button>
+                                    </div>
+                                </div>
+
+                                </div>
+                        </div>
+
+                        </form>
 </div>
 </div>
 </div>
