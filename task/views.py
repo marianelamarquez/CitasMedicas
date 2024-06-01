@@ -466,7 +466,7 @@ def seleccionar_doctor(request):
     # Verificar si el paciente tiene citas pendientes con cada doctor y filtrar los doctores disponibles
     doctores_disponibles = []
     for doctor in doctores:
-        citas_pendientes = Cita.objects.filter(paciente=request.user, doctor=doctor, atendida=False)
+        citas_pendientes = Cita.objects.filter(paciente=request.user, doctor=doctor, atendida=False, falto=False)
         if not citas_pendientes.exists():
             doctores_disponibles.append(doctor)
 
