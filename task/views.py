@@ -15,6 +15,7 @@ from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView
 
 
@@ -123,11 +124,22 @@ class ListaPacientes(ListView):
     model= CustomUser
     template_name='paciente/ListarPaciente.html'
     context_object_name= 'Usuario'
+    paginate_by = 10  # Muestra 10 pacientes por página
+
     def test_func(self):
         return self.request.user.groups.filter(name='admin').exists()
     def get_queryset(self):
         return  CustomUser.objects.filter(groups__name='patient')
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        usuarios_list = self.get_queryset()
+        paginator = Paginator(usuarios_list, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+        context['is_paginated'] = page_obj.has_other_pages()
+        context[self.context_object_name] = page_obj
+        return context
 #-----EDITAR PACIENTE----
 #admin
 class EditarPaciente(UpdateView):
@@ -215,14 +227,27 @@ def create_doctor(request):
 class ListaDoctores(ListView):
     model= CustomUser
     template_name='doctor/ListarDoctor.html'
-    context_object_name= 'Usuario'
+    context_object_name= 'usuario'
+    paginate_by = 10  # Muestra 10 pacientes por página 
 
     def test_func(self):
         return self.request.user.groups.filter(name='admin').exists()
 
     def get_queryset(self):
         return  CustomUser.objects.filter(groups__name='doctor')
-   
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        usuarios_list = self.get_queryset()
+        paginator = Paginator(usuarios_list, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+        context['is_paginated'] = page_obj.has_other_pages()
+        context[self.context_object_name] = page_obj
+        return context
+
+
 #-----EDITAR DOCTOR----
 class EditarDoctorPerfil(UpdateView):
     model = CustomUser
@@ -346,7 +371,6 @@ def ver_disponibilidad(request):
     disponibilidades_list = DisponibilidadDoctor.objects.filter(doctor=request.user, fecha__gte=hoy).order_by('-fecha')
 
     paginator = Paginator(disponibilidades_list, 10)  # Muestra 10 disponibilidades por página
-
     page_number = request.GET.get('page')
     disponibilidades = paginator.get_page(page_number)
 
@@ -556,6 +580,10 @@ def mis_citas(request):
 
     citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False, falto=False).order_by('-fecha').select_related('doctor', 'disponibilidad')
 
+    paginator = Paginator(citas_pendientes, 10)  # Muestra 10 disponibilidades por página
+    page_number = request.GET.get('page')
+    citas_pendientes = paginator.get_page(page_number)
+
     context = get_user_context(request)
     context["citas_pendientes"] = citas_pendientes
     return render(request, "Citas/mis_citas.html", context)
@@ -583,6 +611,10 @@ def citas_atendidas_paciente(request):
     citas_perdidas = Cita.objects.filter(paciente=request.user, falto=True)
    
     citas = (citas_atendidas | citas_perdidas).order_by('-fecha')
+    
+    paginator = Paginator(citas, 10)  # Muestra 10 disponibilidades por página
+    page_number = request.GET.get('page')
+    citas = paginator.get_page(page_number)
 
     context = get_user_context(request)
     context["citas"] = citas
@@ -604,6 +636,11 @@ def citas_doctor(request):
     if not request.user.groups.filter(name="doctor").exists():
         return redirect("home")
     citas = Cita.objects.filter(doctor=request.user, atendida=False, falto=False).order_by('-fecha').select_related('paciente', 'disponibilidad')
+    
+    paginator = Paginator(citas, 10)  # Muestra 10 disponibilidades por página
+    page_number = request.GET.get('page')
+    citas = paginator.get_page(page_number)
+    
     context = get_user_context(request)
     context["citas"] = citas
     return render(request, "Citas/citas_doctor.html", context)
@@ -692,6 +729,11 @@ def doctor_historial(request):
     
     # Unir los queryset y ordenar por fecha
     citas = (citas_atendidas | citas_perdidas).order_by('-fecha')
+
+    paginator = Paginator(citas, 10)  # Muestra 10 disponibilidades por página
+    page_number = request.GET.get('page')
+    citas = paginator.get_page(page_number)
+
     context = get_user_context(request)
     context["citas"] = citas
     return render(request, "Citas/doctor_historial.html", context)

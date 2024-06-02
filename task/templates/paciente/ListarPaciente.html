@@ -20,18 +20,11 @@
 </head>
 {% block content %}
 
-                <!-- Begin Page Content -->
+            <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                  <!--  <h1 class="h3 mb-2 text-gray-800">Lista de Usuarios</h1>
-                    <p class="mb-4">Se listan todos los usuarios tanto pacientes como doctores </p>-->
-
-                    <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">LISTA DE PACIENTES</h6>
-                        
                         </div>
                     {% if Usuario %}
                         <div class="card-body">
@@ -72,9 +65,30 @@
 
                                     {% endfor %}
                                 </table>
+                                  <!-- Paginación -->
+        <div class="pagination justify-content-center">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="btn bg-gray-100 btn-icon-split">&laquo;</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn bg-gray-100 btn-icon-split">anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn bg-gray-100 btn-icon-split">siguiente</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn bg-gray-100 btn-icon-split">&raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        <!-- Fin de Paginación -->
                             </div>
                         </div>
+
                     </div>
+                
 
                 
                 <!-- /.container-fluid -->

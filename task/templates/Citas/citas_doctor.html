@@ -37,6 +37,7 @@
             </ul>
         {% endif %}
     <div class="table-responsive">
+         
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
     <thead>
         <tr>
@@ -48,7 +49,7 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody >
         {% for cita in citas %}
           <tr>
             <td>{{ cita.fecha }}</td>
@@ -71,6 +72,24 @@
         {% endfor %}
       </tbody>
     </table>
+    <!-- Paginación -->
+    <div class="pagination justify-content-center">
+      <span class="step-links">
+          {% if citas.has_previous %}
+              <a href="?page=1" class="btn  bg-gray-100 btn-icon-split">&laquo; </a>
+              <a href="?page={{ citas.previous_page_number }}" class="btn  bg-gray-100 btn-icon-split">anterior</a>
+          {% endif %}
+
+          <span class="current">
+              Página {{ citas.number }} de {{ citas.paginator.num_pages }}.
+          </span>
+         
+          {% if citas.has_next %}
+              <a href="?page={{ citas.next_page_number }}" class="btn  bg-gray-100 btn-icon-split">siguiente</a>
+              <a href="?page={{ citas.paginator.num_pages }}" class="btn  bg-gray-100 btn-icon-split"> &raquo;</a>
+          {% endif %}
+      </span>
+  </div>   <!-- fin Paginación -->
 </div>
 </div>
 {% else %}
@@ -83,6 +102,7 @@
 <!-- Aqui deberia cerrar un div pero queda mal si lo pongo-->
 </div>
 {% endblock %}
+
 <!-- Bootstrap core JavaScript-->
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

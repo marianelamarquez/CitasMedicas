@@ -47,7 +47,7 @@
                             <th>Opciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                         {% for disponibilidad in disponibilidades %}
                         <tr>
                             <td>{{ disponibilidad.fecha }}</td>
@@ -94,6 +94,7 @@
 </form>
 </div>
 {% endblock %}
+
 
 <!-- Bootstrap core JavaScript-->
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
