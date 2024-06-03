@@ -67,4 +67,8 @@ urlpatterns = [
     path('db/', login_required(views.admin_db_view), name='adminBD'),
     path('backup/', login_required(views.database_backup), name='database_backup'),
     path('restore/', login_required(views.database_restore), name='database_restore'),
+    
+    #PDF
+    path('cita/<int:cita_id>/pdf/', login_required(views.generar_pdf_cita), name='generar_pdf_cita'),
+            
 ]

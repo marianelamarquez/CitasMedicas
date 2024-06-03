@@ -3,8 +3,9 @@ from django.utils import timezone
 import json
 import os
 import shutil
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect  
 from django.core.paginator import Paginator
+from django.template.loader import render_to_string
 from django.contrib.auth import logout, login, authenticate,update_session_auth_hash
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
@@ -17,6 +18,8 @@ from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView
+from xhtml2pdf import pisa
+
 
 
 
@@ -770,6 +773,27 @@ def eliminar_cita_historial(request, cita_id):
     context["cita"] = cita
     return render(request, "Citas/eliminar_cita_historial.html", context)
 
+#PDF
+def generar_pdf_cita(request, cita_id):
+    cita = get_object_or_404(Cita, id=cita_id, paciente=request.user)
+
+    html_string = render_to_string('Citas/pdf_cita.html', {'cita': cita})
+
+    response = HttpResponse(content_type='application/pdf')
+    view_inline = request.GET.get('view') == 'inline'
+    if view_inline:
+        response['Content-Disposition'] = f'inline; filename="cita_{cita_id}.pdf"'
+    else:
+        response['Content-Disposition'] = f'attachment; filename="cita_{cita_id}.pdf"'
+
+    pisa_status = pisa.CreatePDF(
+        html_string, dest=response
+    )
+
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF: %s' % pisa_status.err)
+
+    return response
 
 
 #RESPALDO Y RESTAURACION 

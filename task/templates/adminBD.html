@@ -30,7 +30,7 @@
         <div class="card shadow mb-4">
 
             <div class="card-header py-3 text-center">
-                <h6 class="m-0 font-weight-bold text-primary">REALIZAR BACKUP</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Backup</h6>
             </div>
             <div class="card-body d-flex justify-content-center ">
                 <form class="user" method="get" action="{% url 'database_backup' %}">
@@ -42,7 +42,7 @@
         <div class="card shadow mb-4">
 
             <div class="card-header py-3 text-center">
-                <h6 class="m-0 font-weight-bold text-primary">RESTAURAR BASE DE DATOS</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Restaurar</h6>
             </div>
             <div class="card-body d-flex justify-content-center">
                 <form class="user" method="post" enctype="multipart/form-data" action="{% url 'database_restore' %}">

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cita Médica - {{ cita.paciente.first_name|capfirst }}</title>
+    <style>
+
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Encabezado */
+        .header {
+            text-align: center;
+            background-color: white;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+        .header p {
+            border-bottom: 1px solid black;
+            margin: 0;
+        }
+        /* Tabla de información del paciente */
+        .paciente-info {
+            margin-top: 20px; 
+            margin-bottom: 20px;
+        }
+
+        .paciente-info table {
+
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .paciente-info th,
+        .paciente-info td {
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+
+        /* Título "Informe" */
+        .informe {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            max-height: 500px; /* Ajusta el valor según sea necesario */
+        }
+
+        /* Contenido del informe */
+        .informe-contenido {
+            word-break: break-word;
+            margin-bottom: 80px;
+        }
+
+        /* Pie de página */
+        .footer {
+            text-align: center;
+            background-color: white;
+            padding: 10px 0;
+            position: absolute; /* Posicionamiento absoluto */
+            bottom: 0; /* Posiciona el pie de página en la parte inferior */
+            left: 0; /* Posiciona el pie de página en el borde izquierdo */
+            width: 100%; /* Ocupa todo el ancho de la página */
+            margin-top: 50px;
+            margin-bottom: 0; /* Elimina el margen inferior */
+        }
+
+        .nombre {
+            border-top: 1px solid black;
+            margin: 0;
+        }
+
+        .firma {
+            margin: 0;
+        }
+        /* Página 2 */
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Título "Receta" */
+        .receta {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Contenido de la receta */
+        .receta-contenido {
+            word-break: break-word;
+        }
+
+        /* Indicaciones */
+        .indicaciones {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Contenido de las indicaciones */
+        .indicaciones-contenido {
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>CENTRO DE ESPECIALIDADES ANZOATEGUI, C.A</h1>
+        <p>RIF J-08001489-8 - LECHERIA - ANZOATEGUI</p>
+    </div>
+
+    <div class="paciente-info">
+        <table>
+            <tr>
+                <th>Paciente:</th>
+                <td>{{ cita.paciente.first_name|capfirst }} {{ cita.paciente.last_name|capfirst }}</td>
+            </tr>
+            <tr>
+                <th>Fecha:</th>
+                <td>{{ cita.fecha }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="informe">
+        <h2>Informe</h2>
+        <p class="informe-contenido">{{ cita.informe|default:''|escape }}</p>
+    </div>
+
+    <div class="footer">
+        <p class="nombre">NOMBRE DEL DOCTOR: NERY BETANCOURT</p>
+        <p class="firma">FIRMA DEL DOCTOR:</p>
+    </div>
+
+    <div class="page-break"></div>
+    <div class="header">
+        <h1>CENTRO DE ESPECIALIDADES ANZOATEGUI, C.A</h1>
+        <p>RIF J-08001489-8 - LECHERIA - ANZOATEGUI</p>
+    </div>
+    <div class="paciente-info">
+        <table>
+            <tr>
+                <th>Paciente:</th>
+                <td>{{ cita.paciente.first_name|capfirst }} {{ cita.paciente.last_name|capfirst }}</td>
+            </tr>
+            <tr>
+                <th>Fecha:</th>
+                <td>{{ cita.fecha }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="receta">
+        <h2>Receta</h2>
+        <p class="receta-contenido">{{ cita.recipe|default:''|escape }}</p>
+    </div>
+
+    <div class="indicaciones">
+        <h2>Indicaciones</h2>
+        <p class="indicaciones-contenido">{{ cita.indicaciones|default:''|escape }}</p>
+    </div>
+
+    <div class="footer">
+        <p class="nombre">NOMBRE DEL DOCTOR: NERY BETANCOURT</p>
+        <p class="firma">FIRMA DEL DOCTOR:</p>
+    </div>
+</body>
+</html>
