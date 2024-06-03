@@ -70,5 +70,6 @@ urlpatterns = [
     
     #PDF
     path('cita/<int:cita_id>/pdf/', login_required(views.generar_pdf_cita), name='generar_pdf_cita'),
-            
+    path('generar_pdf_cita_doctor/<int:cita_id>/', login_required(views.generar_pdf_cita_doctor), name='generar_pdf_cita_doctor'),
+           
 ]

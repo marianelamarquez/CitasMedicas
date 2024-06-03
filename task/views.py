@@ -773,7 +773,7 @@ def eliminar_cita_historial(request, cita_id):
     context["cita"] = cita
     return render(request, "Citas/eliminar_cita_historial.html", context)
 
-#PDF
+#PDF PACIENTE
 def generar_pdf_cita(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id, paciente=request.user)
 
@@ -786,15 +786,32 @@ def generar_pdf_cita(request, cita_id):
     else:
         response['Content-Disposition'] = f'attachment; filename="cita_{cita_id}.pdf"'
 
-    pisa_status = pisa.CreatePDF(
-        html_string, dest=response
-    )
+    pisa_status = pisa.CreatePDF(html_string, dest=response)
 
     if pisa_status.err:
-        return HttpResponse('Error al generar el PDF: %s' % pisa_status.err)
+        return HttpResponse(f'Error al generar el PDF: {pisa_status.err}', status=500)
 
     return response
 
+#PDF DOCTOR
+def generar_pdf_cita_doctor(request, cita_id):
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+
+    html_string = render_to_string('Citas/pdf_cita_doctor.html', {'cita': cita})
+
+    response = HttpResponse(content_type='application/pdf')
+    view_inline = request.GET.get('view') == 'inline'
+    if view_inline:
+        response['Content-Disposition'] = f'inline; filename="cita_{cita_id}.pdf"'
+    else:
+        response['Content-Disposition'] = f'attachment; filename="cita_{cita_id}.pdf"'
+
+    pisa_status = pisa.CreatePDF(html_string, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse(f'Error al generar el PDF: {pisa_status.err}', status=500)
+
+    return response
 
 #RESPALDO Y RESTAURACION 
 

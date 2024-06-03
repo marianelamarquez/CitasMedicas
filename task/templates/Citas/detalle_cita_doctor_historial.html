@@ -61,10 +61,17 @@
                                             
                                         {% endif %}
                                     </p>
-                                    <br><br><br><br><br>
+                                    <br>
                                     <div class="row justify-content-center">
                                         <form class="user">
-                                            <a href="{% url 'doctor_historial' %}" class="btn btn-primary btn-user">Regresar</a>
+                                            <a href="{% url 'generar_pdf_cita_doctor' cita.id %}?view=inline" class="btn btn-secondary btn-user">Ver PDF</a> 
+                                            <a href="{% url 'generar_pdf_cita_doctor' cita.id %}" class="btn btn-secondary btn-user">Descargar PDF</a>
+                                            </form>
+                                    </div>
+                                    <br><br>
+                                    <div class="row justify-content-center">
+                                        <form class="user">
+                                           <a href="{% url 'doctor_historial' %}" class="btn btn-primary btn-user">Regresar</a>
 
                                         </form>
                                     </div>
