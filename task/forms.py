@@ -1,3 +1,4 @@
+import re
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser,DisponibilidadDoctor,Cita
@@ -21,6 +22,23 @@ class UserRegistrationForm(UserCreationForm):
                 raise forms.ValidationError("Este correo electrónico ya está en uso. Por favor, utiliza otro.")
             return email
     
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if not re.match(r'^[a-zA-Z]+$', first_name):
+            raise forms.ValidationError("El nombre solo puede contener letras.")
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if not re.match(r'^[a-zA-Z]+$', last_name):
+            raise forms.ValidationError("El apellido solo puede contener letras.")
+        return last_name
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data.get('telefono')
+        if not re.match(r'^\d{11}$', telefono):
+            raise forms.ValidationError("El número de teléfono debe contener exactamente 11 dígitos numéricos.")
+        return telefono
 
 #DISPONIBILIDAD DOCTOR
 class DisponibilidadDoctorForm(forms.ModelForm):
