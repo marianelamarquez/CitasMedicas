@@ -12,6 +12,12 @@ class UserRegistrationForm(UserCreationForm):
         fields= ['username','first_name','last_name','email','password1','password2','telefono','direccion','ncolegiom']
     def clean_username(self):
             username = self.cleaned_data['username']
+            max_length = 20
+
+            if len(username) > max_length:
+                raise forms.ValidationError(f"El usuario solo puede contener un máximo de {max_length} caracteres.")
+
+
             if CustomUser.objects.filter(username=username).exists():
                 raise forms.ValidationError("Este nombre de usuario ya está en uso. Por favor, elige otro.")
             return username
@@ -24,14 +30,24 @@ class UserRegistrationForm(UserCreationForm):
     
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
-        if not re.match(r'^[a-zA-Z]+$', first_name):
-            raise forms.ValidationError("El nombre solo puede contener letras.")
+        max_length = 20
+
+        if len(first_name) > max_length:
+            raise forms.ValidationError(f"El nombre solo puede contener un máximo de {max_length} caracteres.")
+
+        if not re.match(r'^[A-Za-zñÑ\s\-]+$', first_name):
+            raise forms.ValidationError("El nombre solo puede contener letras y -")
         return first_name
+
 
     def clean_last_name(self):
         last_name = self.cleaned_data.get('last_name')
-        if not re.match(r'^[a-zA-Z]+$', last_name):
-            raise forms.ValidationError("El apellido solo puede contener letras.")
+        max_length = 20
+        if len(last_name) > max_length:
+            raise forms.ValidationError(f"El nombre solo puede contener un máximo de {max_length} caracteres.")
+
+        if not re.match(r'^[A-Za-zñÑ\s\-]+$', last_name):
+            raise forms.ValidationError("El apellido solo puede contener letras y -")
         return last_name
 
     def clean_telefono(self):
@@ -39,6 +55,18 @@ class UserRegistrationForm(UserCreationForm):
         if not re.match(r'^\d{11}$', telefono):
             raise forms.ValidationError("El número de teléfono debe contener exactamente 11 dígitos numéricos.")
         return telefono
+
+    def clean_direccion(self):
+        direccion = self.cleaned_data.get('direccion')
+
+        # Patrón de expresión regular para validar la dirección (incluyendo la ñ)
+        patron_regex = r'^[A-Za-zñÑ0-9 -]+$'
+
+        # Validación con la expresión regular
+        if not re.match(patron_regex, direccion):
+            raise forms.ValidationError("La dirección solo puede contener letras, números, guiones, espacios y la letra ñ.")
+
+        return direccion
 
 #DISPONIBILIDAD DOCTOR
 class DisponibilidadDoctorForm(forms.ModelForm):

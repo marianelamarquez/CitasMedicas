@@ -490,7 +490,6 @@ def seleccionar_doctor(request):
 
     doctores = CustomUser.objects.filter(groups__name='doctor')
     
-    # Verificar si el paciente tiene citas pendientes con cada doctor y filtrar los doctores disponibles
     doctores_disponibles = []
     for doctor in doctores:
         citas_pendientes = Cita.objects.filter(paciente=request.user, doctor=doctor, atendida=False, falto=False)
@@ -581,7 +580,7 @@ def mis_citas(request):
     if not request.user.groups.filter(name="patient").exists():
         return redirect("home")
 
-    citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False, falto=False).order_by('-fecha').select_related('doctor', 'disponibilidad')
+    citas_pendientes = Cita.objects.filter(paciente=request.user, atendida=False, falto=False).order_by('fecha').select_related('doctor', 'disponibilidad')
 
     paginator = Paginator(citas_pendientes, 10)  # Muestra 10 disponibilidades por página
     page_number = request.GET.get('page')
