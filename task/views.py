@@ -316,7 +316,7 @@ def crear_disponibilidad(request):
         fechas_existentes = [disp.fecha.strftime("%Y-%m-%d") for disp in disponibilidades_existentes]
 
         context = get_user_context(request)
-        context["fechas_existentes"] = json.dumps(fechas_existentes)  # Convertir a JSON
+        context["fechas_existentes"] = json.dumps(fechas_existentes)
 
         return render(request, "doctor/calendario/crear-disponibilidad.html", context)
 
@@ -345,19 +345,15 @@ def crear_disponibilidad(request):
             context = get_user_context(request)
             return render(request, "doctor/calendario/crear-disponibilidad.html", context)
 
-        # Validación para evitar duplicados:
         disponibilidades_existentes = DisponibilidadDoctor.objects.filter(
-            doctor=request.user, fecha=fecha_obj
-        )
-
+            doctor=request.user, fecha=fecha_obj)
         if disponibilidades_existentes:
             messages.error(request, "Ya existe una disponibilidad para esta fecha.")
             context = get_user_context(request)
             return render(request, "doctor/calendario/crear-disponibilidad.html", context)
 
         disponibilidad = DisponibilidadDoctor(
-            doctor=request.user, fecha=fecha_obj, hora_inicio=hora_inicio_obj, hora_fin=hora_fin_obj
-        )
+            doctor=request.user, fecha=fecha_obj, hora_inicio=hora_inicio_obj, hora_fin=hora_fin_obj)
         disponibilidad.save()
 
         messages.success(request, "Disponibilidad creada exitosamente.")
@@ -775,15 +771,21 @@ def eliminar_cita_historial(request, cita_id):
 #PDF PACIENTE
 def generar_pdf_cita(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id, paciente=request.user)
+    
+    # Obtener el nombre del paciente
+    nombre_paciente = cita.paciente.first_name + '_' + cita.paciente.last_name
+
+    # Asegurarse de que el nombre no contiene espacios ni caracteres especiales
+    nombre_paciente = nombre_paciente.replace(' ', '_').replace(',', '').replace(';', '').replace(':', '')
 
     html_string = render_to_string('Citas/pdf_cita.html', {'cita': cita})
 
     response = HttpResponse(content_type='application/pdf')
     view_inline = request.GET.get('view') == 'inline'
     if view_inline:
-        response['Content-Disposition'] = f'inline; filename="cita_{cita_id}.pdf"'
+        response['Content-Disposition'] = f'inline; filename="cita_{nombre_paciente}_{cita_id}.pdf"'
     else:
-        response['Content-Disposition'] = f'attachment; filename="cita_{cita_id}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="cita_{nombre_paciente}_{cita_id}.pdf"'
 
     pisa_status = pisa.CreatePDF(html_string, dest=response)
 
@@ -795,15 +797,21 @@ def generar_pdf_cita(request, cita_id):
 #PDF DOCTOR
 def generar_pdf_cita_doctor(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id, doctor=request.user)
+    
+    # Obtener el nombre del paciente
+    nombre_paciente = cita.paciente.first_name + '_' + cita.paciente.last_name
+
+    # Asegurarse de que el nombre no contiene espacios ni caracteres especiales
+    nombre_paciente = nombre_paciente.replace(' ', '_').replace(',', '').replace(';', '').replace(':', '')
 
     html_string = render_to_string('Citas/pdf_cita_doctor.html', {'cita': cita})
 
     response = HttpResponse(content_type='application/pdf')
     view_inline = request.GET.get('view') == 'inline'
     if view_inline:
-        response['Content-Disposition'] = f'inline; filename="cita_{cita_id}.pdf"'
+        response['Content-Disposition'] = f'inline; filename="cita_{nombre_paciente}_{cita_id}.pdf"'
     else:
-        response['Content-Disposition'] = f'attachment; filename="cita_{cita_id}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="cita_{nombre_paciente}_{cita_id}.pdf"'
 
     pisa_status = pisa.CreatePDF(html_string, dest=response)
 
@@ -811,6 +819,7 @@ def generar_pdf_cita_doctor(request, cita_id):
         return HttpResponse(f'Error al generar el PDF: {pisa_status.err}', status=500)
 
     return response
+
 
 #RESPALDO Y RESTAURACION 
 
