@@ -16,8 +16,7 @@ from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib import messages
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView
+from django.contrib.auth.views import PasswordChangeView
 from xhtml2pdf import pisa
 
 
@@ -89,7 +88,6 @@ class ProfilePasswordChangeView(PasswordChangeView):
         messages.error(self.request, 'No se pudo cambiar la contraseña')
         return self.render_to_response(self.get_context_data(form=form))
     
-
 
 
 # --------------------------- PACIENTES ---------------------------
