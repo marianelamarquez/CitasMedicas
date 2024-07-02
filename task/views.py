@@ -842,7 +842,7 @@ def database_backup(request):
             response['Content-Disposition'] = f'attachment; filename={backup_filename}'
             return response
     except Exception as e:
-        return HttpResponse(f"Error al generar el backup de la base de datos: {str(e)}", status=500)
+            messages.error(request, f"Error al generar el backup de la base de datos: {str(e)}")
     finally:
         if backup_filepath.exists():
             backup_filepath.unlink()
@@ -861,12 +861,12 @@ def database_restore(request):
                     for chunk in backup_file.chunks():
                         destination.write(chunk)
                 shutil.copyfile(temp_backup_path, db_path)
-                return HttpResponse("Base de datos restaurada exitosamente.")
+                messages.success(request, "Base de datos restaurada exitosamente.")            
             except Exception as e:
-                return HttpResponse(f"Error al restaurar la base de datos: {str(e)}", status=500)
+                messages.error(request, f"Error al restaurar la base de datos: {str(e)}")
             finally:
                 if temp_backup_path.exists():
                     temp_backup_path.unlink()
     else:
         form = UploadFileForm()
-    return render(request, 'backup_restore.html', {'form': form})
+    return render(request, 'adminBD.html', {'form': form})
