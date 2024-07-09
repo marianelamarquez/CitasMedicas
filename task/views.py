@@ -84,9 +84,9 @@ class ProfilePasswordChangeView(PasswordChangeView):
         messages.success(self.request, 'Cambio de contraseña exitoso')
         return self.render_to_response(self.get_context_data(form=form))
 
-    def form_invalid(self, form):
-        messages.error(self.request, 'No se pudo cambiar la contraseña')
-        return self.render_to_response(self.get_context_data(form=form))
+ #   def form_invalid(self, form):
+  #      messages.error(self.request, 'No se pudo cambiar la contraseña')
+   #     return self.render_to_response(self.get_context_data(form=form))
     
 
 
