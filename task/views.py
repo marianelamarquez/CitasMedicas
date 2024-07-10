@@ -181,7 +181,7 @@ class EliminarPaciente(DeleteView):
         return context
 #-----Perfil Paciente---
 def perfilPaciente(request, username):
-    if not request.user.groups.filter(name="patient").exists():
+    if not (request.user.groups.filter(name="patient").exists() or request.user.groups.filter(name="admin").exists()):
      return redirect("home")
     
     user = get_object_or_404(CustomUser, username=username)
