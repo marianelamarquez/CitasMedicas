@@ -159,12 +159,12 @@
             </tr>
         </table>
     </div>
-
+    <br><br>
     <div class="informe">
         <h2>Informe</h2>
-        <p class="informe-contenido">{{ cita.informe|default:''|escape }}</p>
+        <p class="informe-contenido" style="text-align: justify;">{{ cita.informe|default:''|escape }}</p>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+   <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <div class="footer">
         <p class="nombre">NOMBRE DEL DOCTOR: {{ cita.doctor.first_name|upper }} {{ cita.doctor.last_name|upper }}</p>
         <p class="firma">FIRMA DEL DOCTOR:</p>
@@ -193,16 +193,17 @@
             </tr>
         </table>
     </div>
+    <br><br>
     <div class="receta">
         <h2>Recipe</h2>
-        <p class="receta-contenido">{{ cita.recipe|default:''|escape }}</p>
+        <p class="receta-contenido" style="text-align: justify;">{{ cita.recipe|default:''|escape }}</p>
     </div>
-
+    <br><br><br><br>
     <div class="indicaciones">
         <h2>Indicaciones</h2>
-        <p class="indicaciones-contenido">{{ cita.indicaciones|default:''|escape }}</p>
+        <p class="indicaciones-contenido" style="text-align: justify;">{{ cita.indicaciones|default:''|escape }}</p>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <div class="footer">
         <p class="nombre">NOMBRE DEL DOCTOR: {{ cita.doctor.first_name|upper }} {{ cita.doctor.last_name|upper }}</p>
         <p class="firma">FIRMA DEL DOCTOR:</p>
