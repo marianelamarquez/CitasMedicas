@@ -38,7 +38,7 @@
                                             <label for="turno">Selecciona un turno:</label>
                                             <select name="turno" id="turno" class="text-secondary">
                                                 {% for inicio, fin in turnos_disponibles %}
-                                                    <option value="{{ inicio }}-{{ fin }}">Turno: {{ forloop.counter }} {{ inicio }} - {{ fin }}</option>
+                                                    <option value="{{ inicio }}-{{ fin }}"> {{ inicio }} - {{ fin }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
