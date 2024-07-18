@@ -153,7 +153,10 @@ class EditarPaciente(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-   
+    def form_valid(self, form):
+        messages.success(self.request, "El paciente ha sido modificado exitosamente.")
+        return super().form_valid(form)
+    
 class EditarPacientePerfil(UpdateView):
     model = CustomUser
     fields = ['first_name', 'last_name', 'telefono', 'email','direccion']  
@@ -168,7 +171,10 @@ class EditarPacientePerfil(UpdateView):
         context['username'] = self.request.user.username
         context.update(get_user_context(self.request)) 
         return context
-    
+    def form_valid(self, form):
+        messages.success(self.request, "Editado exitosamente")
+        return super().form_valid(form)      
+     
 #-----ELIMINAR PACIENTE----
 class EliminarPaciente(DeleteView):
     model = CustomUser
@@ -179,6 +185,9 @@ class EliminarPaciente(DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+    def form_valid(self, form):
+        messages.success(self.request, "El paciente ha sido eliminado exitosamente.")
+        return super().form_valid(form)
 #-----Perfil Paciente---
 def perfilPaciente(request, username):
     if not (request.user.groups.filter(name="patient").exists() or request.user.groups.filter(name="admin").exists()):
@@ -263,7 +272,9 @@ class EditarDoctorPerfil(UpdateView):
         context['username'] = self.request.user.username
         context.update(get_user_context(self.request)) 
         return context
-   
+    def form_valid(self, form):
+        messages.success(self.request, "Editado exitosamente")
+        return super().form_valid(form)   
 #editar doc admin
 class EditarDoctor(UpdateView):
     model = CustomUser
@@ -275,7 +286,9 @@ class EditarDoctor(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
+    def form_valid(self, form):
+        messages.success(self.request, "El doctor ha sido modificado exitosamente.")
+        return super().form_valid(form)
     #-----ELIMINAR DOCTOR----
 #-----ELIMINAR DOCTOR ----
 class EliminarDoctor(DeleteView):
@@ -287,7 +300,9 @@ class EliminarDoctor(DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-
+    def form_valid(self, form):
+            messages.success(self.request, "El doctor ha sido eliminado exitosamente.")
+            return super().form_valid(form)
 #----Perfil Doctor---
 def perfilDoctor(request, username):
     if not request.user.groups.filter(name="doctor").exists():

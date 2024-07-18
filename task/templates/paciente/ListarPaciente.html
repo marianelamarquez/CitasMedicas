@@ -26,6 +26,16 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">LISTA DE PACIENTES</h6>
                         </div>
+                        {% if messages %}
+                         
+                                <ul>
+                                    {% for message in messages %}
+                                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                           
+                            
+                        {% endif %}
                     {% if Usuario %}
                         <div class="card-body">
                             <div class="table-responsive">

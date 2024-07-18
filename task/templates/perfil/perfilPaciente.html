@@ -8,6 +8,15 @@
          
       </div>
       <div class="card-body">
+        <div class="row justify-content-center">
+          {% if messages %}
+          <ul class="text-center list-unstyled">
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+      </div>
         <form class="user" method="POST">
             {% csrf_token %}
             <div class="row justify-content-center">
