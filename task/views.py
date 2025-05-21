@@ -18,8 +18,8 @@ from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 from xhtml2pdf import pisa
-
-
+from datetime import datetime as dt
+from django.db.models import Q  # Importar Q para consultas complejas
 
 
 #Para saber que tipo de usuario es y enviar a las vistas
@@ -274,7 +274,8 @@ class EditarDoctorPerfil(UpdateView):
         return context
     def form_valid(self, form):
         messages.success(self.request, "Editado exitosamente")
-        return super().form_valid(form)   
+        return super().form_valid(form)  
+     
 #editar doc admin
 class EditarDoctor(UpdateView):
     model = CustomUser
@@ -289,7 +290,9 @@ class EditarDoctor(UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "El doctor ha sido modificado exitosamente.")
         return super().form_valid(form)
-    #-----ELIMINAR DOCTOR----
+    
+
+ #-----ELIMINAR DOCTOR----
 #-----ELIMINAR DOCTOR ----
 class EliminarDoctor(DeleteView):
     model = CustomUser
@@ -547,7 +550,7 @@ def agendar_cita(request, disponibilidad_id):
         return redirect("home")
 
     disponibilidad = get_object_or_404(DisponibilidadDoctor, id=disponibilidad_id)
-    hoy = timezone.now().date()
+    hoy = datetime.datetime.now().date()  # Usa datetime.datetime para acceder a las funciones originales
 
     # Verifica que la fecha de la disponibilidad no haya pasado
     if disponibilidad.fecha < hoy:
@@ -558,17 +561,34 @@ def agendar_cita(request, disponibilidad_id):
 
     if turno:
         inicio, fin = turno.split('-')
+
+        # Convertir las horas a objetos de tiempo usando dt.strptime
+        hora_inicio = dt.strptime(inicio, "%H:%M").time()
+        hora_fin = dt.strptime(fin, "%H:%M").time()
+
         # Verificar si el turno ya está reservado
-        if Cita.objects.filter(disponibilidad=disponibilidad, hora_inicio=inicio, hora_fin=fin).exists():
+        if Cita.objects.filter(disponibilidad=disponibilidad, hora_inicio=hora_inicio, hora_fin=hora_fin).exists():
             messages.error(request, "Este turno ya ha sido reservado. Por favor, selecciona otro turno.")
             return redirect('seleccionar_turno', disponibilidad_id=disponibilidad.id)
-        
+
+        # Verificar si el paciente ya tiene una cita agendada que se superpone con la nueva cita
+        citas_conflictivas = Cita.objects.filter(
+            paciente=request.user,
+            fecha=disponibilidad.fecha
+        ).filter(
+            Q(hora_inicio__lt=hora_fin, hora_fin__gt=hora_inicio)
+        )
+
+        if citas_conflictivas.exists():
+            messages.error(request, "Ya tienes una cita agendada que se superpone con este horario.")
+            return redirect('seleccionar_turno', disponibilidad_id=disponibilidad.id)
+
         cita = Cita.objects.create(
             doctor=disponibilidad.doctor,
             paciente=request.user,
             fecha=disponibilidad.fecha,
-            hora_inicio=inicio,
-            hora_fin=fin,
+            hora_inicio=hora_inicio,
+            hora_fin=hora_fin,
             disponibilidad=disponibilidad
         )
         messages.success(request, "Cita agendada con éxito.")
