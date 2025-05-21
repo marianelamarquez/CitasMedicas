@@ -12,7 +12,7 @@ To run the project locally:
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/marianelamarquez/CitasMedicas.git](https://github.com/marianelamarquez/CitasMedicas.git)
+git clone https://github.com/marianelamarquez/CitasMedicas.git
 ```
 ### 2.Navigate to the project directory
 ```bash
